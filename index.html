@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dylan Brouwer | Digital Designer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Loader -->
+    <div id="loader">
+        <div class="loading-arc"></div>
+        <div id="loader-text">SETTING UP DB-PORTFOLIO[v2]...</div>
+    </div>
+    
+    <!-- Mood Selector -->
+    <div id="mood-selector">
+        <div class="mood-circle">
+            <div class="mood-indicator"></div>
+            <div class="mood-options">
+                <div class="mood-option dark-option active-option">
+                    <span class="mood-label">DARK</span>
+                </div>
+                <div class="mood-option light-option">
+                    <span class="mood-label">LIGHT</span>
+                </div>
+                <div class="mood-option stark-option">
+                    <span class="mood-label">STARK</span>
+                </div>
+                <div class="center-plus">+</div>
+            </div>
+        </div>
+        <p>SET THE MOOD THAT MATCHES YOUR VIBE</p>
+        <button id="set-mood-btn">SET MOOD <span class="btn-plus">+</span></button>
+    </div>
+    
+    <!-- Main Website -->
+    <div class="header">
+        <div class="logo">B</div>
+        <div class="info">
+            <div>DYLAN BROUWER [NL]</div>
+            <div>DIGITAL DESIGNER / NO-CODE DEVELOPER</div>
+            <div class="status">
+                <span class="status-dot"></span>
+                <span>OPEN TO NEW PROJECTS</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <div class="sidebar">
+            <div class="sidebar-dots">
+                <div class="dot dot-filled" data-theme="dark"></div>
+                <div class="dot dot-outline" data-theme="light"></div>
+                <div class="dot dot-outline" data-theme="stark"></div>
+            </div>
+            <div class="tagline">
+                CREATING DIGITAL<br>
+                EXPERIENCES WITH AN EYE<br>
+                FOR DESIGN AND MOTION
+            </div>
+        </div>
+        
+        <div class="main-area">
+            <div class="section-title">RECENT WORK</div>
+            <div class="eye-container">
+                <div class="eye">
+                    <div class="pupil"></div>
+                </div>
+                <div class="orbit"></div>
+            </div>
+            
+            <div class="work-grid">
+                <div class="work-item" data-work="str8fire">
+                    <img src="/api/placeholder/400/320" alt="STR8FIRE" class="work-image">
+                    <div class="work-info">
+                        <div class="work-site">WEBSITE: STR8FIRE.IO</div>
+                        <div class="work-title">STR8FIRE</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="nav-circle">
+        <div class="nav-indicator" style="top: 25px; left: 50%; transform: translate(-50%, 0);"></div>
+        <div class="nav-item nav-index">INDEX</div>
+        <div class="nav-item nav-work">WORK</div>
+        <div class="nav-item nav-about">ABOUT</div>
+        <div class="nav-item nav-contact">CONTACT</div>
+    </div>
+    
+    <!-- About Panel -->
+    <div class="about-panel">
+        <div class="close-panel">X</div>
+        <div class="about-content">
+            <div class="profile-pic">
+                <img src="/api/placeholder/80/80" alt="Dylan Brouwer">
+            </div>
+            <h2>DYLAN BROUWER</h2>
+            <div class="about-text">
+                COMBINING DESIGN EXPERTISE WITH WEBFLOW DEVELOPMENT.
+            </div>
+            <div class="about-text">
+                SPECIALIZED IN CRAFTING EXPERIENCE-DRIVEN WEBSITES THAT STAND OUT THROUGH BOLD DESIGN, SEAMLESS MOTION, AND INNOVATIVE FUNCTIONALITY.
+            </div>
+            <div class="about-text">
+                CURRENTLY WORKING AS A FREELANCER ON OCCASSION AND IN-HOUSE AT STUDIO UNCOMMON (ENSCHEDE, NL).
+            </div>
+            <div class="about-text">
+                <img src="/api/placeholder/150/40" alt="Webflow Certified Partner">
+            </div>
+        </div>
+    </div>
+    
+    <!-- Contact Panel -->
+    <div class="contact-panel">
+        <div class="close-panel">X</div>
+        <div class="contact-content">
+            <h2>CONTACT</h2>
+            <a href="mailto:hello@dylanbrouwer.design" class="contact-email">HELLO@DYLANBROUWER.DESIGN</a>
+            
+            <div class="social-links">
+                <a href="#" class="social-link">LINKEDIN</a>
+                <a href="#" class="social-link">INSTAGRAM</a>
+            </div>
+            
+            <a href="#" class="awards-link">
+                <span>AWWWARDS</span>
+                <span>W.</span>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Work View - Now slides from right -->
+    <div id="work-view">
+        <div class="header">
+            <div class="logo">B</div>
+            <div class="info">
+                <div>DYLAN BROUWER [NL]</div>
+                <div>DIGITAL DESIGNER / NO-CODE DEVELOPER</div>
+                <div class="status">
+                    <span class="status-dot"></span>
+                    <span>OPEN TO NEW PROJECTS</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="work-details">
+            <div class="work-detail">
+                <img src="/api/placeholder/600/350" alt="STR8FIRE" class="work-image">
+                <div class="work-info">
+                    <div class="work-site">WEBSITE: STR8FIRE.IO</div>
+                    <div class="work-title">TOKENIZING ENTERTAINMENT</div>
+                </div>
+            </div>
+            <div class="work-detail">
+                <img src="/api/placeholder/600/350" alt="TWICE" class="work-image">
+                <div class="work-info">
+                    <div class="work-site">WEBSITE: TWICEMEDIAHOUSE.COM</div>
+                    <div class="work-title">THE BEST STORIES DESERVE TO BE TOLD</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="work-close">X</div>
+        
+        <div class="nav-circle">
+            <div class="nav-indicator" style="left: 25px; top: 50%; transform: translate(0, -50%);"></div>
+            <div class="nav-item nav-index">INDEX</div>
+            <div class="nav-item nav-work">WORK</div>
+            <div class="nav-item nav-about">ABOUT</div>
+            <div class="nav-item nav-contact">CONTACT</div>
+        </div>
+    </div>
+    
+    <script>
+        // Variables for eye tracking
+        let pupil = null;
+        let eyeContainer = null;
+        let isMobile = window.innerWidth < 768;
+        
+        // Function to simulate loading
+        setTimeout(() => {
+            document.getElementById('loader').style.display = 'none';
+        }, 2000);
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            pupil = document.querySelector('.pupil');
+            eyeContainer = document.querySelector('.eye-container');
+            
+            // Mood selector interactions
+            const moodOptions = document.querySelectorAll('.mood-option');
+            const moodIndicator = document.querySelector('.mood-indicator');
+            const setMoodBtn = document.getElementById('set-mood-btn');
+            
+            moodOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    moodOptions.forEach(opt => opt.classList.remove('active-option'));
+                    this.classList.add('active-option');
+                    
+                    moodIndicator.classList.add('rotate-mood');
+                    setTimeout(() => moodIndicator.classList.remove('rotate-mood'), 600);
+                    
+                    if (this.classList.contains('dark-option')) {
+                        moodIndicator.style.transform = 'translateX(-50%) rotate(0deg)';
+                    } else if (this.classList.contains('light-option')) {
+                        moodIndicator.style.transform = 'translateX(-50%) rotate(-90deg)';
+                    } else if (this.classList.contains('stark-option')) {
+                        moodIndicator.style.transform = 'translateX(-50%) rotate(90deg)';
+                    }
+                });
+            });
+            
+            setMoodBtn.addEventListener('click', function() {
+                document.getElementById('mood-selector').style.display = 'none';
+            });
+            
+            // Enhanced eye tracking with smoothing
+            if (!isMobile) {
+                let currentX = 0;
+                let currentY = 0;
+                let targetX = 0;
+                let targetY = 0;
+
+                document.addEventListener('mousemove', function(e) {
+                    if (pupil && eyeContainer) {
+                        const eyeRect = eyeContainer.getBoundingClientRect();
+                        const eyeCenterX = eyeRect.left + eyeRect.width / 2;
+                        const eyeCenterY = eyeRect.top + eyeRect.height / 2;
+                        
+                        let angle = Math.atan2(e.clientY - eyeCenterY, e.clientX - eyeCenterX);
+                        let distance = Math.min(
+                            Math.sqrt(Math.pow(e.clientX - eyeCenterX, 2) + Math.pow(e.clientY - eyeCenterY, 2)),
+                            30 // Reduced maximum distance
+                        );
+                        
+                        targetX = Math.cos(angle) * distance * 0.8;
+                        targetY = Math.sin(angle) * distance * 0.8;
+                    }
+                });
+
+                function updateEye() {
+                    currentX += (targetX - currentX) * 0.8; // Increased from 0.1 to 0.3
+                    currentY += (targetY - currentY) * 0.8; // Increased from 0.1 to 0.3
+                    
+                    if (pupil) {
+                        pupil.style.transform = `translate(${currentX}px, ${currentY}px)`;
+                    }
+                    requestAnimationFrame(updateEye);
+                }
+                updateEye();
+            }
+            
+            // Navigation interactions
+            const navItems = document.querySelectorAll('.nav-item');
+            const navIndicator = document.querySelector('.nav-indicator');
+            const aboutPanel = document.querySelector('.about-panel');
+            const contactPanel = document.querySelector('.contact-panel');
+            const closePanels = document.querySelectorAll('.close-panel');
+            const workView = document.getElementById('work-view');
+            const workItems = document.querySelectorAll('.work-item');
+            const workClose = document.querySelector('.work-close');
+            const statusBox = document.querySelector('.status');
+            const logo = document.querySelector('.logo');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const activePanel = document.querySelector('.panel-active');
+                    if (activePanel) {
+                        activePanel.classList.remove('panel-active');
+                        setTimeout(() => {
+                            navItems.forEach(nav => nav.style.display = 'block');
+                        }, 500);
+                    }
+                    
+                    if (this.classList.contains('nav-index')) {
+                        navIndicator.style.top = '25px';
+                        navIndicator.style.left = '50%';
+                        navIndicator.style.transform = 'translate(-50%, 0)';
+                        
+                        aboutPanel.classList.remove('panel-active');
+                        contactPanel.classList.remove('panel-active');
+                        workView.classList.remove('active');
+                        setTimeout(() => {
+                            workView.style.visibility = 'hidden';
+                        }, 400);
+                    } else if (this.classList.contains('nav-work')) {
+                        navIndicator.style.top = '50%';
+                        navIndicator.style.left = '25px';
+                        navIndicator.style.transform = 'translate(0, -50%)';
+                        
+                        workView.style.visibility = 'visible';
+                        setTimeout(() => {
+                            workView.classList.add('active');
+                        }, 10);
+                        aboutPanel.classList.remove('panel-active');
+                        contactPanel.classList.remove('panel-active');
+                    } else if (this.classList.contains('nav-about')) {
+                        navIndicator.style.top = '50%';
+                        navIndicator.style.left = 'calc(100% - 25px)';
+                        navIndicator.style.transform = 'translate(0, -50%)';
+                        
+                        aboutPanel.classList.add('panel-active');
+                        contactPanel.classList.remove('panel-active');
+                        workView.classList.remove('active');
+                        setTimeout(() => {
+                            workView.style.visibility = 'hidden';
+                        }, 400);
+                    } else if (this.classList.contains('nav-contact')) {
+                        navIndicator.style.top = 'calc(100% - 25px)';
+                        navIndicator.style.left = '50%';
+                        navIndicator.style.transform = 'translate(-50%, 0)';
+                        
+                        contactPanel.classList.add('panel-active');
+                        aboutPanel.classList.remove('panel-active');
+                        workView.classList.remove('active');
+                        setTimeout(() => {
+                            workView.style.visibility = 'hidden';
+                        }, 400);
+                    }
+                });
+            });
+            
+            closePanels.forEach(closeBtn => {
+                closeBtn.addEventListener('click', function() {
+                    aboutPanel.classList.remove('panel-active');
+                    contactPanel.classList.remove('panel-active');
+                    
+                    navIndicator.style.top = '25px';
+                    navIndicator.style.left = '50%';
+                    navIndicator.style.transform = 'translate(-50%, 0)';
+                });
+            });
+            
+            workClose.addEventListener('click', function() {
+                workView.classList.remove('active');
+                setTimeout(() => {
+                    workView.style.visibility = 'hidden';
+                }, 400);
+                
+                navIndicator.style.top = '25px';
+                navIndicator.style.left = '50%';
+                navIndicator.style.transform = 'translate(-50%, 0)';
+            });
+            
+            workItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    workView.style.visibility = 'visible';
+                    setTimeout(() => {
+                        workView.classList.add('active');
+                    }, 10);
+                    
+                    navIndicator.style.top = '50%';
+                    navIndicator.style.left = '25px';
+                    navIndicator.style.transform = 'translate(0, -50%)';
+                });
+            });
+            
+            statusBox.addEventListener('click', function() {
+                contactPanel.classList.add('panel-active');
+                aboutPanel.classList.remove('panel-active');
+                
+                navIndicator.style.top = 'calc(100% - 25px)';
+                navIndicator.style.left = '50%';
+                navIndicator.style.transform = 'translate(-50%, 0)';
+            });
+            
+            logo.addEventListener('click', function() {
+                aboutPanel.classList.add('panel-active');
+                contactPanel.classList.remove('panel-active');
+                
+                navIndicator.style.top = '50%';
+                navIndicator.style.left = 'calc(100% - 25px)';
+                navIndicator.style.transform = 'translate(0, -50%)';
+            });
+            
+            const themeDots = document.querySelectorAll('.sidebar-dots .dot');
+            
+            themeDots.forEach(dot => {
+                dot.addEventListener('click', function() {
+                    const theme = this.getAttribute('data-theme');
+                    
+                    themeDots.forEach(d => {
+                        d.classList.remove('dot-filled');
+                        d.classList.add('dot-outline');
+                    });
+                    
+                    this.classList.remove('dot-outline');
+                    this.classList.add('dot-filled');
+                    
+                    document.body.classList.remove('dark-theme', 'light-theme', 'stark-theme');
+                    
+                    if (theme === 'dark') {
+                        document.body.classList.add('dark-theme');
+                        document.documentElement.style.setProperty('--primary-color', '#8080ff');
+                        document.documentElement.style.setProperty('--bg-color', '#111111');
+                        document.documentElement.style.setProperty('--secondary-bg', '#1a1a1a');
+                        document.documentElement.style.setProperty('--text-color', '#f0f0f0');
+                    } else if (theme === 'light') {
+                        document.body.classList.add('light-theme');
+                        document.documentElement.style.setProperty('--primary-color', '#5050ff');
+                        document.documentElement.style.setProperty('--bg-color', '#f5f5f5');
+                        document.documentElement.style.setProperty('--secondary-bg', '#e0e0e0');
+                        document.documentElement.style.setProperty('--text-color', '#111111');
+                    } else if (theme === 'stark') {
+                        document.body.classList.add('stark-theme');
+                        document.documentElement.style.setProperty('--primary-color', '#ff5050');
+                        document.documentElement.style.setProperty('--bg-color', '#000000');
+                        document.documentElement.style.setProperty('--secondary-bg', '#0a0a0a');
+                        document.documentElement.style.setProperty('--text-color', '#f0f0f0');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
