@@ -38,18 +38,25 @@ document.addEventListener('DOMContentLoaded', function() {
             // Add active class to clicked option
             this.classList.add('active-option');
             
-            // Calculate angle based on option position and update indicator
-            const optionClass = this.classList[1];
-            const angles = {
-                'dark-option': 0,
-                'light-option': 90,
-                'stark-option': -90
-            };
+            // Get position and angle of clicked option for clock-like behavior
+            const optionRect = this.getBoundingClientRect();
+            const circleRect = document.querySelector('.mood-circle').getBoundingClientRect();
             
-            moodIndicator.style.transform = `rotate(${angles[optionClass]}deg)`;
+            const circleCenterX = circleRect.left + circleRect.width / 2;
+            const circleCenterY = circleRect.top + circleRect.height / 2;
+            
+            const optionCenterX = optionRect.left + optionRect.width / 2;
+            const optionCenterY = optionRect.top + optionRect.height / 2;
+            
+            // Calculate angle using atan2
+            const angle = Math.atan2(optionCenterY - circleCenterY, optionCenterX - circleCenterX);
+            const angleDeg = angle * (180 / Math.PI);
+            
+            // Update indicator to point to option
+            moodIndicator.style.transform = `rotate(${angleDeg}deg)`;
             
             // Update sidebar dots to match selected mood
-            const theme = optionClass.split('-')[0];
+            const theme = this.classList[1].split('-')[0];
             updateSidebarDots(theme);
         });
     });
@@ -75,13 +82,34 @@ document.addEventListener('DOMContentLoaded', function() {
     const aboutPanel = document.querySelector('.about-panel');
     const contactPanel = document.querySelector('.contact-panel');
     const workView = document.getElementById('work-view');
+    const navCircleElement = document.querySelector('.nav-circle');
     
     navItems.forEach(item => {
-        item.addEventListener('click', function() {
+        item.addEventListener('click', function(e) {
             const navType = this.classList[1];
             
-            // Update nav indicator position based on clicked item
-            updateNavIndicator(navType);
+            // Get position of click for clock-like behavior
+            const navRect = navCircleElement.getBoundingClientRect();
+            const navCenterX = navRect.left + navRect.width / 2;
+            const navCenterY = navRect.top + navRect.height / 2;
+            
+            const clickX = e.clientX;
+            const clickY = e.clientY;
+            
+            // Calculate angle using atan2
+            const angle = Math.atan2(clickY - navCenterY, clickX - navCenterX);
+            const angleDeg = angle * (180 / Math.PI);
+            
+            // Calculate position based on angle (along the circular edge)
+            const radius = navRect.width / 2 - 20; // 20px inside edge
+            const posX = Math.cos(angle) * radius;
+            const posY = Math.sin(angle) * radius;
+            
+            // Update nav indicator position based on angle
+            const navIndicator = document.querySelector('.nav-indicator');
+            navIndicator.style.transform = 'translate(-50%, -50%)';
+            navIndicator.style.left = `calc(50% + ${posX}px)`;
+            navIndicator.style.top = `calc(50% + ${posY}px)`;
             
             // Handle different navigation actions
             if (navType === 'nav-about') {
@@ -103,6 +131,35 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+    
+    // Make nav circle clickable for clock-like behavior
+    navCircleElement.addEventListener('click', function(e) {
+        if (e.target === this) {
+            // Only respond to clicks on the circle itself, not its children
+            const navRect = this.getBoundingClientRect();
+            const navCenterX = navRect.left + navRect.width / 2;
+            const navCenterY = navRect.top + navRect.height / 2;
+            
+            const clickX = e.clientX;
+            const clickY = e.clientY;
+            
+            // Calculate angle using atan2
+            const angle = Math.atan2(clickY - navCenterY, clickX - navCenterX);
+            const angleDeg = angle * (180 / Math.PI);
+            
+            // Calculate position based on angle (along the circular edge)
+            const radius = navRect.width / 2 - 20; // 20px inside edge
+            const posX = Math.cos(angle) * radius;
+            const posY = Math.sin(angle) * radius;
+            
+            // Update nav indicator position based on angle
+            const navIndicator = document.querySelector('.nav-indicator');
+            navIndicator.style.transform = 'translate(-50%, -50%)';
+            navIndicator.style.left = `calc(50% + ${posX}px)`;
+            navIndicator.style.top = `calc(50% + ${posY}px)`;
+        }
+    });
+    
     
     // Close panel buttons
     const closePanelBtns = document.querySelectorAll('.close-panel');
@@ -137,36 +194,6 @@ document.addEventListener('DOMContentLoaded', function() {
     setupEyeTracking();
 });
 
-// Function to update nav indicator position
-function updateNavIndicator(navType) {
-    const navIndicator = document.querySelector('.nav-indicator');
-    
-    switch(navType) {
-        case 'nav-index':
-            navIndicator.style.top = '25px';
-            navIndicator.style.left = '50%';
-            navIndicator.style.transform = 'translate(-50%, 0)';
-            break;
-        case 'nav-work':
-            navIndicator.style.left = '25px';
-            navIndicator.style.top = '50%';
-            navIndicator.style.transform = 'translate(0, -50%)';
-            break;
-        case 'nav-about':
-            navIndicator.style.right = '25px';
-            navIndicator.style.left = 'auto';
-            navIndicator.style.top = '50%';
-            navIndicator.style.transform = 'translate(0, -50%)';
-            break;
-        case 'nav-contact':
-            navIndicator.style.bottom = '25px';
-            navIndicator.style.top = 'auto';
-            navIndicator.style.left = '50%';
-            navIndicator.style.transform = 'translate(-50%, 0)';
-            break;
-    }
-}
-
 // Function to update sidebar dots to match selected theme
 function updateSidebarDots(theme) {
     const dots = document.querySelectorAll('.sidebar-dots .dot');
@@ -182,7 +209,7 @@ function updateSidebarDots(theme) {
     });
 }
 
-// Setup eye tracking functionality
+// Setup eye tracking functionality with improved smoothness
 function setupEyeTracking() {
     if (!pupil || !eyeContainer) {
         pupil = document.querySelector('.pupil');
@@ -190,6 +217,13 @@ function setupEyeTracking() {
     }
     
     if (pupil && eyeContainer) {
+        // Create a buffer for smoother animation
+        let targetX = 0;
+        let targetY = 0;
+        let currentX = 0;
+        let currentY = 0;
+        const easing = 0.1; // Adjust for smoother or faster movement
+        
         document.addEventListener('mousemove', function(e) {
             if (isMobile) return;
             
@@ -206,12 +240,26 @@ function setupEyeTracking() {
                 40
             );
             
-            // Set pupil position
-            const pupilX = Math.cos(angle) * distance;
-            const pupilY = Math.sin(angle) * distance;
-            
-            pupil.style.transform = `translate(${pupilX}px, ${pupilY}px)`;
+            // Set target pupil position
+            targetX = Math.cos(angle) * distance;
+            targetY = Math.sin(angle) * distance;
         });
+        
+        // Use requestAnimationFrame for smoother animation
+        function animateEye() {
+            // Interpolate current position towards target position
+            currentX += (targetX - currentX) * easing;
+            currentY += (targetY - currentY) * easing;
+            
+            // Update pupil position
+            pupil.style.transform = `translate(${currentX}px, ${currentY}px)`;
+            
+            // Continue animation loop
+            requestAnimationFrame(animateEye);
+        }
+        
+        // Start animation loop
+        animateEye();
     }
 }
 

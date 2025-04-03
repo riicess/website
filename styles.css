@@ -104,7 +104,7 @@ body {
     border: 1px solid var(--text-color);
     border-radius: 50%;
     margin-bottom: 30px;
-    transform: rotate(45deg); /* Base rotation for the circle */
+    transform: rotate(0deg); /* Reset base rotation */
 }
 
 .mood-options {
@@ -152,22 +152,22 @@ body {
 
 .mood-indicator {
     position: absolute;
-    width: 20px;
+    width: 40px;
     height: 20px;
     top: 50%;
     left: 50%;
-    transform-origin: center;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: 50% 0%;
     z-index: 1;
 }
 
 .mood-indicator::after {
-    content: '▼'; /* Changed to a down arrow */
+    content: '▼';
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: var(--text-color);
+    color: var(--primary-color);
+    font-size: 16px;
 }
 
 .center-plus {
@@ -263,8 +263,8 @@ body {
 }
 
 .sidebar {
-    width: 200px;
-    padding-right: 20px;
+    width: 300px; /* Wider sidebar to fit work items */
+    padding-right: 30px;
 }
 
 .sidebar-dots {
@@ -305,62 +305,82 @@ body {
 }
 
 .main-area {
-    flex: 1;
+    flex: 2;
     display: flex;
-    flex-direction: column;
-    align-items: center; /* Center the eye */
+    justify-content: center;
+    align-items: center;
 }
 
+/* Eye updates to match the purple wireframe sphere with eye */
 .eye-container {
     width: 100%;
-    height: 300px;
+    height: 400px; /* Increased height */
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
-    margin: 50px 0; /* Add some vertical spacing */
+    margin: 30px 0;
 }
 
 .eye {
-    width: 200px;
-    height: 200px;
+    width: 250px; /* Bigger eye */
+    height: 250px; /* Bigger eye */
     border-radius: 50%;
     border: 1px solid var(--primary-color);
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.5));
+    background: transparent;
     transition: transform 0.3s ease;
-    overflow: hidden;
+    overflow: visible; /* Allow wireframe to extend beyond */
 }
 
-.eye:before {
+.eye-wireframe {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid var(--primary-color);
+    transform: rotate(45deg);
+}
+
+.eye-wireframe:before,
+.eye-wireframe:after {
     content: '';
     position: absolute;
     width: 100%;
     height: 100%;
     border-radius: 50%;
     border: 1px solid var(--primary-color);
-    transform: rotate(45deg);
+}
+
+.eye-wireframe:before {
+    transform: rotate(30deg);
+}
+
+.eye-wireframe:after {
+    transform: rotate(60deg);
 }
 
 .pupil {
-    width: 40px;
-    height: 40px;
+    width: 60px; /* Bigger pupil */
+    height: 60px; /* Bigger pupil */
     background-color: var(--primary-color);
     border-radius: 50%;
     position: absolute;
     transform-origin: center center;
-    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    max-width: 40%;
-    max-height: 40%;
+    transition: transform 0.05s cubic-bezier(0.4, 0, 0.2, 1);
+    max-width: 50%;
+    max-height: 50%;
+    z-index: 2;
 }
 
 .orbit {
     position: absolute;
-    width: 250px;
-    height: 100px;
+    width: 350px; /* Bigger orbit */
+    height: 150px;
     border: 1px solid var(--primary-color);
     border-radius: 50%;
     transform: rotate(-15deg);
@@ -368,7 +388,11 @@ body {
 
 /* Remove work from main scroll */
 .work-grid {
-    display: none;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 30px;
+    width: 100%;
 }
 
 /* Work View Updates */
@@ -427,8 +451,8 @@ body {
     position: fixed;
     bottom: 30px;
     right: 30px;
-    width: 150px;
-    height: 150px;
+    width: 120px; /* Smaller nav circle */
+    height: 120px; /* Smaller nav circle */
     border: 1px solid var(--text-color);
     border-radius: 50%;
     display: flex;
@@ -438,6 +462,7 @@ body {
     visibility: hidden;
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 750;
+    cursor: pointer; /* Make entire circle clickable */
 }
 
 .nav-circle.show {
@@ -488,14 +513,15 @@ body {
 }
 
 .nav-indicator {
-    width: 40px;
-    height: 40px;
+    width: 20px; /* Smaller indicator */
+    height: 20px; /* Smaller indicator */
     background-color: var(--primary-color);
     border-radius: 50%;
     position: absolute;
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translate(-50%, -50%);
     z-index: 0;
-    opacity: 0.3;
+    opacity: 0.7; /* More visible */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .nav-circle .close-x {
