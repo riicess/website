@@ -23,9 +23,9 @@ setTimeout(() => {
 document.addEventListener('DOMContentLoaded', function() {
     const moodOptions = document.querySelectorAll('.mood-option');
     const moodIndicator = document.querySelector('.mood-indicator');
-    let currentRotation = 0;
-
-    moodOptions.forEach((option, index) => {
+    const setMoodBtn = document.getElementById('set-mood-btn');
+    
+    moodOptions.forEach(option => {
         option.addEventListener('click', function() {
             // Remove active class from all options
             moodOptions.forEach(opt => opt.classList.remove('active-option'));
@@ -33,11 +33,18 @@ document.addEventListener('DOMContentLoaded', function() {
             // Add active class to clicked option
             this.classList.add('active-option');
             
-            // Calculate rotation - add 45 degrees each time
-            currentRotation += 45;
-            
-            // Apply rotation - this creates a circular movement effect
-            moodIndicator.style.transform = `translateX(-50%) rotate(${currentRotation}deg)`;
+            // Rotate indicator to point at selected option
+            const angle = this.dataset.angle;
+            moodIndicator.style.transform = `rotate(${angle}deg)`;
         });
+    });
+    
+    setMoodBtn.addEventListener('click', function() {
+        const activeOption = document.querySelector('.mood-option.active-option');
+        if (activeOption) {
+            const mood = activeOption.classList[1].split('-')[0];
+            // Handle mood setting here
+            console.log(`Setting mood to: ${mood}`);
+        }
     });
 });
