@@ -17,6 +17,7 @@ body {
     color: var(--text-color);
     overflow-x: hidden;
     min-height: 100vh;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #loader {
@@ -64,31 +65,14 @@ body {
     right: -2px;  /* Match border width */
     bottom: -2px;  /* Match border width */
     border: 2px solid var(--bg-color);
+    border-top: 2px solid var(--text-color);
     border-radius: 50%;
     animation: loadSpin 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 @keyframes loadSpin {
-    0% { 
-        clip-path: polygon(50% 50%, 50% 0%, 50% 0%, 50% 0%);
-        transform: rotate(0deg);
-    }
-    25% {
-        clip-path: polygon(50% 50%, 50% 0%, 100% 0%, 100% 100%);
-        transform: rotate(0deg);
-    }
-    50% {
-        clip-path: polygon(50% 50%, 50% 0%, 100% 0%, 100% 100%, 0% 100%);
-        transform: rotate(0deg);
-    }
-    75% {
-        clip-path: polygon(50% 50%, 50% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%);
-        transform: rotate(0deg);
-    }
-    100% { 
-        clip-path: polygon(50% 50%, 50% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%);
-        transform: rotate(360deg);
-    }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 #mood-selector {
@@ -135,6 +119,16 @@ body {
     text-align: center;
     transform-origin: center;
     cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.mood-option:hover {
+    color: var(--primary-color);
+}
+
+.mood-option.active-option {
+    color: var(--primary-color);
+    font-weight: bold;
 }
 
 /* Position options at 45-degree intervals */
@@ -168,7 +162,7 @@ body {
 }
 
 .mood-indicator::after {
-    content: '▼'; /* Changed from ▲ to ▼ */
+    content: '▼'; /* Changed to a down arrow */
     position: absolute;
     top: 50%;
     left: 50%;
@@ -204,6 +198,11 @@ body {
     font-size: 12px;
     text-transform: uppercase;
     margin-top: 20px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-plus {
+    margin-left: 8px;
 }
 
 #set-mood-btn:hover {
@@ -280,6 +279,7 @@ body {
     height: 10px;
     border-radius: 50%;
     cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .dot-filled {
@@ -332,6 +332,7 @@ body {
     align-items: center;
     background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.5));
     transition: transform 0.3s ease;
+    overflow: hidden;
 }
 
 .eye:before {
@@ -391,6 +392,12 @@ body {
     border-radius: 5px;
     overflow: hidden;
     position: relative;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.work-item:hover {
+    transform: translateY(-5px);
 }
 
 .work-image {
@@ -430,6 +437,7 @@ body {
     opacity: 0;
     visibility: hidden;
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 750;
 }
 
 .nav-circle.show {
@@ -444,6 +452,10 @@ body {
     cursor: pointer;
     z-index: 1;
     transition: transform 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+}
+
+.nav-item:hover {
+    color: var(--primary-color);
 }
 
 .nav-circle.show-close .nav-item {
@@ -494,6 +506,7 @@ body {
     transition: all 0.3s ease;
     visibility: hidden;
     z-index: 900;
+    cursor: pointer;
 }
 
 .nav-circle.show-close .close-x {
@@ -609,6 +622,10 @@ body {
     font-size: 14px;
 }
 
+.contact-email:hover {
+    color: var(--primary-color);
+}
+
 .social-links {
     display: flex;
     justify-content: center;
@@ -671,25 +688,30 @@ body {
     background-color: var(--secondary-bg);
     border-radius: 5px;
     overflow: hidden;
+    transition: transform 0.3s ease;
 }
 
-/* Improved readability for dark theme */
+.work-detail:hover {
+    transform: translateY(-5px);
+}
+
+/* Theme settings */
 .light-theme {
-    --text-color: #f0f0f0;
+    --text-color: #111111;
     --bg-color: #f5f5f5;
     --secondary-bg: #e0e0e0;
     --primary-color: #5050ff;
 }
 
 .dark-theme {
-    --text-color: #f0f0f0; /* Brighter text for better contrast */
+    --text-color: #f0f0f0;
     --bg-color: #111111;
     --secondary-bg: #1a1a1a;
     --primary-color: #8080ff;
 }
 
 .stark-theme {
-    --text-color: #f0f0f0; /* Brighter text for better contrast */
+    --text-color: #f0f0f0;
     --bg-color: #000000;
     --secondary-bg: #0a0a0a;
     --primary-color: #ff5050;
@@ -713,19 +735,20 @@ body {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Close button for modals */
-.close-button {
+/* Work close button */
+.work-close {
     position: absolute;
-    bottom: 15px;
-    right: 15px;
+    top: 20px;
+    right: 20px;
     width: 30px;
     height: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid rgba(255, 255, 255, 0.3);
     cursor: pointer;
+    z-index: 801;
 }
 
 /* Animation Classes */
@@ -736,4 +759,32 @@ body {
 
 .rotate-mood {
     animation: circleRotate 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Media queries for responsive design */
+@media (max-width: 768px) {
+    .header .info {
+        display: none;
+    }
+    
+    .nav-circle {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .about-panel,
+    .contact-panel {
+        width: calc(100% - 60px);
+        right: 30px;
+        left: 30px;
+    }
+    
+    .main-content {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        padding-right: 0;
+    }
 }
