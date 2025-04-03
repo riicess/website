@@ -217,9 +217,8 @@ function setupEyeTracking() {
     let lastMouseY = 0;
     let rafId = null;
     
-    // Add mouse move event listener for eye tracking
     document.addEventListener('mousemove', (e) => {
-        if (isMobile) return; // Disable on mobile
+        if (isMobile) return;
         
         lastMouseX = e.clientX;
         lastMouseY = e.clientY;
@@ -235,28 +234,20 @@ function setupEyeTracking() {
         const eyeCenterX = eyeRect.left + eyeRect.width / 2;
         const eyeCenterY = eyeRect.top + eyeRect.height / 2;
         
-        // Calculate direction vector from eye center to mouse
         let deltaX = lastMouseX - eyeCenterX;
         let deltaY = lastMouseY - eyeCenterY;
         
-        // Calculate distance and direction
         const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
         
-        // Normalize and scale with smoother interpolation
         if (distance > 0) {
-            // Add easing for smoother movement
             deltaX = (deltaX / distance) * Math.min(distance * 0.5, maxPupilTravel);
             deltaY = (deltaY / distance) * Math.min(distance * 0.5, maxPupilTravel);
         }
         
-        // Apply transformation to pupil with smoother movement
         pupil.style.transform = `translate3d(${deltaX}px, ${deltaY}px, 0)`;
-        
-        // Request another frame for smooth tracking
         rafId = requestAnimationFrame(updatePupilPosition);
     }
     
-    // Add device orientation for mobile with smoother transitions
     if (window.DeviceOrientationEvent) {
         window.addEventListener('deviceorientation', handleOrientation);
     }
@@ -265,16 +256,13 @@ function setupEyeTracking() {
 function handleOrientation(event) {
     if (!isMobile || !pupil) return;
     
-    // Use beta (x-axis) and gamma (y-axis) for pupil movement with smoother curve
-    const maxTilt = 15; // Maximum tilt angle to consider
+    const maxTilt = 15;
     const beta = Math.min(Math.max(event.beta, -maxTilt), maxTilt);
     const gamma = Math.min(Math.max(event.gamma, -maxTilt), maxTilt);
     
-    // Scale tilt to pupil movement with easing (0-20px)
     const moveX = (gamma / maxTilt) * 20;
     const moveY = (beta / maxTilt) * 20;
     
-    // Apply movement with 3D transform
     pupil.style.transform = `translate3d(${moveX}px, ${moveY}px, 0)`;
 }
 
