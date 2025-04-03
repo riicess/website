@@ -25,7 +25,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const moodIndicator = document.querySelector('.mood-indicator');
     const setMoodBtn = document.getElementById('set-mood-btn');
     
-    moodOptions.forEach(option => {
+    // Initialize indicator position
+    moodIndicator.style.transform = 'rotate(45deg)';
+    
+    moodOptions.forEach((option, index) => {
         option.addEventListener('click', function() {
             // Remove active class from all options
             moodOptions.forEach(opt => opt.classList.remove('active-option'));
@@ -33,8 +36,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // Add active class to clicked option
             this.classList.add('active-option');
             
-            // Rotate indicator to point at selected option
-            const angle = this.dataset.angle;
+            // Calculate rotation angle (45 degrees * index)
+            const angle = 45 + (index * 90);
             moodIndicator.style.transform = `rotate(${angle}deg)`;
         });
     });
