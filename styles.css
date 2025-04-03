@@ -117,9 +117,8 @@ body {
     position: absolute;
     width: 80px;
     text-align: center;
-    transform-origin: center;
     cursor: pointer;
-    transition: color 0.3s ease;
+    transition: color 0.3s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .mood-option:hover {
@@ -134,19 +133,19 @@ body {
 .dark-option {
     top: -30px;
     left: 50%;
-    transform: translateX(-50%) rotate(-45deg);
+    transform: translateX(-50%); /* Remove rotation */
 }
 
 .light-option {
     right: -30px;
     top: 50%;
-    transform: translateY(-50%) rotate(-45deg);
+    transform: translateY(-50%); /* Remove rotation */
 }
 
 .stark-option {
     left: -30px;
     top: 50%;
-    transform: translateY(-50%) rotate(-45deg);
+    transform: translateY(-50%); /* Remove rotation */
 }
 
 .mood-indicator {
@@ -157,6 +156,7 @@ body {
     left: 50%;
     transform-origin: 50% 0%;
     z-index: 1;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* Smoother clock hand */
 }
 
 .mood-indicator::after {
@@ -317,7 +317,7 @@ body {
 }
 
 .work-thumbnail:hover {
-    transform: translateY(-5px);
+    transform: translate3d(0, -5px, 0) scale3d(1.02, 1.02, 1);
 }
 
 .work-thumbnail img {
@@ -402,7 +402,7 @@ body {
     border-radius: 50%;
     position: absolute;
     transform-origin: center center;
-    transition: transform 0.05s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1); /* Smoother transition */
     max-width: 50%;
     max-height: 50%;
     z-index: 2;
@@ -426,8 +426,9 @@ body {
     background-color: var(--bg-color);
     z-index: 800;
     padding: 20px;
-    transform: translateX(100%);
+    transform: translate3d(100%, 0, 0);
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
 }
 
 .work-details {
@@ -447,7 +448,7 @@ body {
 }
 
 .work-detail:hover {
-    transform: translateY(-5px);
+    transform: translate3d(0, -5px, 0) scale3d(1.02, 1.02, 1);
 }
 
 .work-image {
@@ -496,41 +497,37 @@ body {
 .nav-circle.show {
     opacity: 1;
     visibility: visible;
+    transform: scale3d(1, 1, 1); /* Added 3D scale */
 }
 
+/* Fix navigation text positioning */
 .nav-item {
     position: absolute;
     font-size: 12px;
     text-transform: uppercase;
     cursor: pointer;
     z-index: 1;
-    transition: transform 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .nav-item:hover {
     color: var(--primary-color);
 }
 
-.nav-index {
-    top: 35px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
 .nav-work {
-    bottom: 35px;
+    bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
 }
 
 .nav-about {
-    right: 35px;
+    right: 20px;
     top: 50%;
     transform: translateY(-50%);
 }
 
 .nav-contact {
-    left: 35px;
+    left: 20px;
     top: 50%;
     transform: translateY(-50%);
 }
@@ -541,10 +538,11 @@ body {
     background-color: var(--primary-color);
     border-radius: 50%;
     position: absolute;
-    transform: translate(-50%, -50%);
+    transform: translate3d(-50%, -50%, 0) scale3d(1, 1, 1);
     z-index: 0;
     opacity: 0.7;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
 }
 
 .about-panel,
@@ -555,13 +553,14 @@ body {
     width: 400px;
     background-color: var(--secondary-bg);
     border-radius: 15px;
-    transform: translateY(20px);
+    transform: translate3d(0, 20px, 0) scale3d(0.95, 0.95, 1);
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 750;
     border: 1px solid rgba(255, 255, 255, 0.1);
     padding: 30px;
+    transform-style: preserve-3d;
 }
 
 .about-panel::after,
@@ -580,7 +579,7 @@ body {
 
 .panel-active.about-panel,
 .panel-active.contact-panel {
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
     opacity: 1;
     visibility: visible;
 }
@@ -600,6 +599,13 @@ body {
     z-index: 760;
     background-color: var(--secondary-bg);
     font-size: 12px;
+    transform: scale3d(1, 1, 1);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+}
+
+.close-panel:hover {
+    transform: scale3d(1.1, 1.1, 1);
 }
 
 .about-content,
