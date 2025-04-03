@@ -210,26 +210,15 @@ function setupEyeTracking() {
     // Calculate boundaries and limitations
     const eyeRect = document.querySelector('.eye').getBoundingClientRect();
     const eyeRadius = eyeRect.width / 2;
-    const maxPupilTravel = eyeRadius * 0.5; // Limit pupil movement to 50% of eye radius
+    const maxPupilTravel = eyeRadius * 0.5;
     
-    // Smooth tracking with improved timing
     let lastMouseX = 0;
     let lastMouseY = 0;
     let rafId = null;
-    
-    document.addEventListener('mousemove', (e) => {
-        if (isMobile) return;
-        
-        lastMouseX = e.clientX;
-        lastMouseY = e.clientY;
-        
-        if (!rafId) {
-            rafId = requestAnimationFrame(updatePupilPosition);
-        }
-    });
+    let isTracking = false;
     
     function updatePupilPosition() {
-        rafId = null;
+        if (!isTracking) return;
         
         const eyeCenterX = eyeRect.left + eyeRect.width / 2;
         const eyeCenterY = eyeRect.top + eyeRect.height / 2;
@@ -247,6 +236,26 @@ function setupEyeTracking() {
         pupil.style.transform = `translate3d(${deltaX}px, ${deltaY}px, 0)`;
         rafId = requestAnimationFrame(updatePupilPosition);
     }
+    
+    document.addEventListener('mousemove', (e) => {
+        if (isMobile) return;
+        
+        lastMouseX = e.clientX;
+        lastMouseY = e.clientY;
+        
+        if (!isTracking) {
+            isTracking = true;
+            updatePupilPosition();
+        }
+    });
+    
+    document.addEventListener('mouseleave', () => {
+        isTracking = false;
+        if (rafId) {
+            cancelAnimationFrame(rafId);
+            rafId = null;
+        }
+    });
     
     if (window.DeviceOrientationEvent) {
         window.addEventListener('deviceorientation', handleOrientation);
