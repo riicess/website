@@ -179,15 +179,20 @@ body {
 .mood-indicator {
     position: absolute;
     width: 0; height: 0;
-    top: calc(50% - 10px);
+    /* Position exactly at the center initially */
+    top: 50%;
     left: 50%;
-    transform-origin: center 10px;
+    /* Remove transform-origin, JS will handle the full transform */
+    /* transform-origin: center 10px; */
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-bottom: 10px solid rgba(255, 255, 255, 0.7);
+    border-bottom: 10px solid rgba(255, 255, 255, 0.7); /* Arrow shape */
     z-index: 1;
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    transform: translateX(-50%) rotate(0deg);
+    /* Remove the static CSS transform, JS will set it */
+    /* transform: translateX(-50%) rotate(0deg); */
+    /* Ensure centered before JS moves it */
+    transform: translate(-50%, -50%);
 }
 
 .tick-mark {
@@ -396,10 +401,11 @@ body {
     height: 100%;
     position: relative;
     transform-style: preserve-3d; /* <<< CONFIRMED: Enable 3D space for children */
-    animation: rotateSphere 40s linear infinite; /* Adjust duration as needed */
+    /* animation: rotateSphere 40s linear infinite; */ /* <--- COMMENTED OUT THIS LINE */
     /* border: 1px dashed lime; */ /* Optional: Debug border */
 }
 
+/* Keep the @keyframes rule, it doesn't hurt to leave it */
 @keyframes rotateSphere {
     from { transform: rotateX(0deg) rotateY(0deg); }
     to   { transform: rotateX(360deg) rotateY(360deg); }
@@ -419,6 +425,7 @@ body {
     /* Base transform is handled inline or via specific classes */
     transform-origin: center center;
     pointer-events: none; /* Lines shouldn't block interaction */
+    backface-visibility: visible; /* <<< ADD THIS LINE TO SEE THE BACK */
 }
 /* Specific transforms are set inline in HTML */
 
