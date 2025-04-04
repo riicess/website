@@ -7,7 +7,7 @@ let isMobile = window.innerWidth < 768;
 // Loading sequence
 const loader = document.getElementById('loader');
 const moodSelector = document.getElementById('mood-selector');
-const mainContent = document.querySelector('.main-content');
+const contentWrapper = document.querySelector('.content-wrapper'); // Target new wrapper
 const header = document.querySelector('.header');
 const navCircle = document.querySelector('.nav-circle');
 
@@ -48,22 +48,24 @@ document.addEventListener('DOMContentLoaded', function() {
             const circleCenterX = circleRect.left + circleRect.width / 2;
             const circleCenterY = circleRect.top + circleRect.height / 2;
 
-            // Calculate center of the clicked option (relative to viewport)
-            const optionCenterX = optionRect.left + optionRect.width / 2;
-            const optionCenterY = optionRect.top + optionRect.height / 2;
+            // Calculate center of the clicked option text (relative to viewport)
+            const label = this.querySelector('.mood-label');
+            const labelRect = label.getBoundingClientRect();
+            const optionCenterX = labelRect.left + labelRect.width / 2;
+            const optionCenterY = labelRect.top + labelRect.height / 2;
 
             // Calculate angle from circle center to option center
             // Add 90 degrees because 0 degrees in atan2 is right, but our arrow starts pointing up
             const angleRad = Math.atan2(optionCenterY - circleCenterY, optionCenterX - circleCenterX);
             const angleDeg = angleRad * (180 / Math.PI) + 90; // Offset by 90deg
 
-            // Update indicator arrow rotation
+            // Update indicator arrow rotation to point AT the option's center
             moodIndicator.style.transform = `translateX(-50%) rotate(${angleDeg}deg)`;
 
-            // Update sidebar dots to match selected mood
-            const theme = this.classList.contains('dark-option') ? 'dark' :
+            // Determine theme based on class
+            const theme = this.classList.contains('dark-option') ? 'dark' : // Check class names
                           this.classList.contains('light-option') ? 'light' :
-                          this.classList.contains('spring-option') ? 'spring' : 'dark'; // Default to dark
+                          this.classList.contains('spark-option') ? 'spark' : 'dark'; // Changed to spark-option
             updateSidebarDots(theme);
         });
     });
@@ -81,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (activeOption) {
             const mood = activeOption.classList.contains('dark-option') ? 'dark' :
                          activeOption.classList.contains('light-option') ? 'light' :
-                         activeOption.classList.contains('spring-option') ? 'spring' : 'dark'; // Default to dark
+                         activeOption.classList.contains('spark-option') ? 'spark' : 'dark'; // Changed to spark-option
 
             document.body.className = `${mood}-theme`; // Apply theme class to body
 
@@ -94,12 +96,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 moodSelector.style.display = 'none'; // Hide completely after transition
 
                 // Show main content with transitions
-                mainContent.classList.add('show');
-                header.classList.add('show');
+                contentWrapper.classList.add('show'); // Show the new wrapper
+                header.classList.add('show'); // May not be needed if header is always visible
                 navCircle.classList.add('show'); // Nav circle appears with its own transition
 
                 // Initialize eye tracking after main content is shown
-                setupEyeTracking();
+                 setupEyeTracking();
                 // Set initial nav indicator position
                  const initialNavItem = document.querySelector('.nav-item.nav-index'); // Start at Index
                  if(initialNavItem) {
@@ -130,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
      // Function to move the indicator
     function moveNavIndicator(targetItem) {
         const navIndicator = document.querySelector('.nav-indicator');
-        if (!navIndicator || !navCircle) return;
+        if (!navIndicator || !navCircle || !targetItem) return; // Add check for targetItem
 
         const angle = parseFloat(targetItem.getAttribute('data-angle')) || 0;
         const radius = navCircle.offsetWidth / 2 - navIndicator.offsetWidth / 2 - 10; // Adjust radius (e.g., subtract padding/border)
@@ -140,15 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     navItems.forEach((item) => {
-        item.addEventListener('mouseenter', function() {
-             moveNavIndicator(this);
-        });
-
-        // Optional: Reset indicator when mouse leaves the circle
-        // navCircle.addEventListener('mouseleave', () => {
-        //     const currentItem = document.querySelector('.nav-item.active-nav') || document.querySelector('.nav-item.nav-index');
-        //     if(currentItem) moveNavIndicator(currentItem);
-        // });
+        // REMOVED MOUSEENTER listener for nav indicator movement
 
         item.addEventListener('click', function() {
             // Optional: Mark active nav item visually if needed
@@ -167,12 +161,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (workView) workView.classList.remove('show');
                 closeAllPanels();
             }
-             // Move indicator to clicked item
-             moveNavIndicator(this);
+             // Move indicator ONLY on click
+             moveNavIndicator(this); // 'this' refers to the clicked item
         });
     });
 
     function togglePanel(panelToShow, panelToHide) {
+        if (!panelToShow) return; // Add safety check
+
         if (panelToShow.classList.contains('panel-active')) {
             panelToShow.classList.remove('panel-active'); // Close if already open
         } else {
@@ -182,7 +178,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function closeAllPanels() {
-         panels.forEach(panel => panel.classList.remove('panel-active'));
+         panels.forEach(panel => {
+             if (panel) panel.classList.remove('panel-active')
+         });
     }
 
 
@@ -190,7 +188,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const closePanelBtns = document.querySelectorAll('.close-panel');
     closePanelBtns.forEach((btn) => {
         btn.addEventListener('click', function() {
-            this.parentElement.classList.remove('panel-active');
+            const panel = this.closest('.about-panel, .contact-panel'); // Find parent panel robustly
+            if (panel) panel.classList.remove('panel-active');
         });
     });
 
@@ -207,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function() {
     sidebarDots.forEach((dot) => {
         dot.addEventListener('click', function() {
             const theme = this.getAttribute('data-theme');
-            document.body.className = `${theme}-theme`; // Apply theme class
+            document.body.className = `${theme}-theme`; // Apply theme class directly
             updateSidebarDots(theme);
 
             // Add scale animation for dot click
@@ -243,11 +242,13 @@ function setupEyeTracking() {
     let lastMouseY = window.innerHeight / 2;
 
     function updatePupilPosition() {
-        if (!isTracking && (Math.abs(currentX - targetX) < 0.1 && Math.abs(currentY - targetY) < 0.1)) {
-             // Stop RAF if not tracking and close to target (center)
-            if(rafId) cancelAnimationFrame(rafId);
-            rafId = null;
-            return; // Exit if not tracking and centered
+        // Stop RAF if not tracking and close to target (center)
+        if (!isTracking && Math.abs(currentX - targetX) < 0.1 && Math.abs(currentY - targetY) < 0.1) {
+             if(rafId) {
+                 cancelAnimationFrame(rafId);
+                 rafId = null;
+             }
+             return; // Exit if not tracking and centered
         }
 
         // Calculate movement constraints based on the eye-outline size
@@ -278,7 +279,6 @@ function setupEyeTracking() {
              targetY = Math.max(-maxMoveY, Math.min(maxMoveY, targetY));
         }
 
-
         // Apply easing
         currentX += (targetX - currentX) * easing;
         currentY += (targetY - currentY) * easing;
@@ -303,7 +303,6 @@ function setupEyeTracking() {
     document.addEventListener('mouseleave', () => {
         if (isMobile) return;
         isTracking = false; // Target becomes center (0,0), animation continues via RAF until centered
-        // Don't cancel RAF here, let it return pupil to center smoothly
     });
 
      // Start animation loop initially to center the pupil if mouse never enters
@@ -330,10 +329,18 @@ window.addEventListener('resize', function() {
     isMobile = window.innerWidth < 768;
 
      // Re-initialize nav indicator position if needed
-    const currentNavItem = document.querySelector('.nav-item.active-nav') || document.querySelector('.nav-item.nav-index');
+    const currentNavItem = document.querySelector('.nav-item.active-nav') || document.querySelector('.nav-item.nav-index'); // Select current or default to index
     if (navCircle && navCircle.classList.contains('show') && currentNavItem) {
        setTimeout(() => { // Delay slightly to allow layout reflow
-           moveNavIndicator(currentNavItem);
+            // Find the currently 'active' nav item if one exists, otherwise default to index
+            const activeItem = [...navItems].find(item => {
+                if (item.classList.contains('nav-about') && aboutPanel?.classList.contains('panel-active')) return true;
+                if (item.classList.contains('nav-contact') && contactPanel?.classList.contains('panel-active')) return true;
+                if (item.classList.contains('nav-work') && workView?.classList.contains('show')) return true;
+                return false;
+            }) || document.querySelector('.nav-item.nav-index'); // Default to index if nothing else is active
+
+           moveNavIndicator(activeItem);
        }, 50);
     }
 
@@ -344,6 +351,8 @@ window.addEventListener('resize', function() {
          setupEyeTracking();
     } else if (isMobile && innerPupil) { // Reset pupil on mobile
          innerPupil.style.transform = `translate(-50%, -50%) translate(0px, 0px)`;
+         // Optionally cancel animation frame on mobile
+         // if (rafId) cancelAnimationFrame(rafId); rafId = null;
     }
 
 });
@@ -357,7 +366,7 @@ function animateLoader() {
     let dotCount = 0;
     const intervalId = setInterval(() => {
         // Check if loader is still visible
-        if (loader.style.display === 'none' || loader.classList.contains('hide')) {
+        if (!loader || loader.style.display === 'none' || loader.classList.contains('hide')) {
             clearInterval(intervalId);
             return;
         }

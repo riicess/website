@@ -25,20 +25,17 @@
             <div class="tick-mark tick-4"></div>
             <div class="tick-mark tick-5"></div>
             <div class="tick-mark tick-6"></div>
-            <!-- Center plus is removed as per image -->
-            <!-- <div class="center-plus">+</div> -->
             <div class="mood-options">
                  <!-- data-angle is now used for JS calculation -->
                 <div class="mood-option dark-option active-option" data-angle="0">
                     <span class="mood-dot"></span><span class="mood-label">DARK</span>
                 </div>
                 <div class="mood-option light-option" data-angle="-90">
-                     <span class="mood-dot"></span><span class="mood-label">LIGHT</span>
+                    <span class="mood-dot"></span><span class="mood-label">LIGHT</span>
                 </div>
-                <div class="mood-option spring-option" data-angle="90">
-                     <span class="mood-dot"></span><span class="mood-label">SPRING</span>
+                <div class="mood-option spark-option" data-angle="90">
+                    <span class="mood-dot"></span><span class="mood-label">SPARK</span>
                 </div>
-                <!-- Removed Stark option -->
                 <!-- Center crosshair -->
                 <div class="center-crosshair-h"></div>
                 <div class="center-crosshair-v"></div>
@@ -51,23 +48,26 @@
     <!-- Main Website -->
     <div class="header">
         <div class="logo">B</div>
-        <div class="info">
+        <!-- Group the name/title info -->
+        <div class="header-info-block">
             <div>DYLAN BROUWER [NL]</div>
             <div>DIGITAL DESIGNER / NO-CODE DEVELOPER</div>
-            <div class="status">
-                <span class="status-dot"></span>
-                <span>OPEN TO NEW PROJECTS</span>
-            </div>
+        </div>
+        <!-- Status is now separate -->
+        <div class="status">
+            <span class="status-dot"></span>
+            <span>OPEN TO NEW PROJECTS</span>
         </div>
     </div>
 
-    <div class="main-content">
+    <!-- New wrapper for content below header -->
+    <div class="content-wrapper">
         <div class="sidebar">
             <div class="sidebar-dots">
                  <!-- Ensure data-theme matches the mood options -->
                 <div class="dot dot-filled" data-theme="dark"></div>
                 <div class="dot dot-outline" data-theme="light"></div>
-                <div class="dot dot-outline" data-theme="spring"></div> <!-- Add dot for spring if needed -->
+                <div class="dot dot-outline" data-theme="spark"></div>
             </div>
             <div class="tagline">
                 CREATING DIGITAL<br>
@@ -77,7 +77,8 @@
             <div class="section-title">RECENT WORK</div>
 
             <div class="work-thumbnail">
-                <img src="/api/placeholder/280/200" alt="Project 1" class="work-image">
+                <!-- Use a real image or a working placeholder service if needed -->
+                <img src="https://via.placeholder.com/280x200/1a1a1a/a39aed.png?text=STRFIRE" alt="Project 1" class="work-image">
                 <div class="work-label">STRFIRE</div>
             </div>
         </div>
@@ -101,6 +102,8 @@
             </div>
         </div>
     </div>
+    <!-- End content-wrapper -->
+
 
     <div class="nav-circle">
         <!-- Indicator dot moves along the edge -->
@@ -116,7 +119,8 @@
         <div class="close-panel">X</div>
         <div class="about-content">
             <div class="profile-pic">
-                <img src="/api/placeholder/80/80" alt="Profile Picture">
+                 <!-- Use a real image or a working placeholder service -->
+                <img src="https://via.placeholder.com/80x80/333333/f0f0f0.png?text=DB" alt="Profile Picture">
             </div>
             <h2>DYLAN BROUWER</h2>
             <div class="about-text">
@@ -129,7 +133,8 @@
                 CURRENTLY WORKING AS A FREELANCER AND OPEN TO NEW OPPORTUNITIES.
             </div>
             <div class="about-text">
-                <img src="/api/placeholder/150/40" alt="Certification Badge">
+                 <!-- Use a real image or a working placeholder service -->
+                <img src="https://via.placeholder.com/150x40/555555/cccccc.png?text=CERTIFIED" alt="Certification Badge">
             </div>
         </div>
     </div>
@@ -153,35 +158,39 @@
         </div>
     </div>
 
-    <!-- Work View - Slides from right -->
+    <!-- Work View - Slides from left -->
     <div id="work-view">
-        <div class="header">
+        <!-- Reuse header structure -->
+         <div class="header">
             <div class="logo">B</div>
-            <div class="info">
+            <div class="header-info-block">
                 <div>DYLAN BROUWER [NL]</div>
                 <div>DIGITAL DESIGNER / NO-CODE DEVELOPER</div>
-                <div class="status">
-                    <span class="status-dot"></span>
-                    <span>OPEN TO NEW PROJECTS</span>
-                </div>
+            </div>
+            <div class="status">
+                <span class="status-dot"></span>
+                <span>OPEN TO NEW PROJECTS</span>
             </div>
         </div>
 
         <div class="work-details">
             <div class="work-detail">
-                <img src="/api/placeholder/600/350" alt="Project 1" class="work-image">
+                 <!-- Use a real image or a working placeholder service -->
+                <img src="https://via.placeholder.com/600x350/1a1a1a/a39aed.png?text=Project+1" alt="Project 1" class="work-image">
                 <div class="work-info">
                     <div class="work-site">WEBSITE: STRFIRE.COM</div>
                     <div class="work-title">REDEFINING ENTERTAINMENT</div>
                 </div>
             </div>
             <div class="work-detail">
-                <img src="/api/placeholder/600/350" alt="Project 2" class="work-image">
+                 <!-- Use a real image or a working placeholder service -->
+                <img src="https://via.placeholder.com/600x350/1a1a1a/cccccc.png?text=Project+2" alt="Project 2" class="work-image">
                 <div class="work-info">
                     <div class="work-site">WEBSITE: PROJECT2.COM</div>
                     <div class="work-title">PROJECT 2 DETAILS</div>
                 </div>
             </div>
+             <!-- Add more work details as needed -->
         </div>
         <div class="work-close">X</div>
     </div>
