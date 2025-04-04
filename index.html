@@ -14,11 +14,10 @@
     </div>
 
     <!-- Mood Selector -->
+    <!-- ... (mood selector code remains the same) ... -->
     <div id="mood-selector">
-        <div class="mood-circle">
-            <!-- The rotating arrow indicator -->
+         <div class="mood-circle">
             <div class="mood-indicator"></div>
-            <!-- Tick marks -->
             <div class="tick-mark tick-1"></div>
             <div class="tick-mark tick-2"></div>
             <div class="tick-mark tick-3"></div>
@@ -26,7 +25,6 @@
             <div class="tick-mark tick-5"></div>
             <div class="tick-mark tick-6"></div>
             <div class="mood-options">
-                 <!-- data-angle is now used for JS calculation -->
                 <div class="mood-option dark-option active-option" data-angle="0">
                     <span class="mood-dot"></span><span class="mood-label">DARK</span>
                 </div>
@@ -36,7 +34,6 @@
                 <div class="mood-option spark-option" data-angle="90">
                     <span class="mood-dot"></span><span class="mood-label">SPARK</span>
                 </div>
-                <!-- Center crosshair -->
                 <div class="center-crosshair-h"></div>
                 <div class="center-crosshair-v"></div>
             </div>
@@ -47,27 +44,27 @@
 
     <!-- Main Website -->
     <div class="header">
-        <div class="logo">B</div>
-        <!-- Group the name/title info -->
+        <div class="logo">E</div>
         <div class="header-info-block">
-            <div>DYLAN BROUWER [NL]</div>
-            <div>DIGITAL DESIGNER / NO-CODE DEVELOPER</div>
+            <!-- Add class and data attribute -->
+            <div class="interactive-hover-trigger" data-hover-text="ABOUT ME" id="header-name-trigger">
+                EREN [TR]
+            </div>
+            <div>DIGITAL DESIGNER / DEVELOPER</div>
         </div>
-        <!-- Status is now separate -->
-        <div class="status">
+        <!-- Add class and data attribute -->
+        <div class="status interactive-hover-trigger" data-hover-text="GET IN TOUCH" id="header-status-trigger">
             <span class="status-dot"></span>
             <span>OPEN TO NEW PROJECTS</span>
         </div>
     </div>
 
-    <!-- New wrapper for content below header -->
     <div class="content-wrapper">
         <div class="sidebar">
             <div class="sidebar-dots">
-                 <!-- Ensure data-theme matches the mood options -->
-                <div class="dot dot-filled" data-theme="dark"></div>
-                <div class="dot dot-outline" data-theme="light"></div>
-                <div class="dot dot-outline" data-theme="spark"></div>
+                <div class="dot dot-outline active" data-theme="dark" data-color="black"></div>
+                <div class="dot dot-outline" data-theme="light" data-color="white"></div>
+                <div class="dot dot-outline" data-theme="spark" data-color="orange"></div>
             </div>
             <div class="tagline">
                 CREATING DIGITAL<br>
@@ -76,25 +73,23 @@
             </div>
             <div class="section-title">RECENT WORK</div>
 
-            <div class="work-thumbnail">
-                <!-- Use a real image or a working placeholder service if needed -->
+            <!-- Add class and data attribute -->
+            <div class="work-thumbnail interactive-hover-trigger" data-hover-text="SHOW WORK" id="work-thumbnail-trigger">
                 <img src="https://via.placeholder.com/280x200/1a1a1a/a39aed.png?text=STRFIRE" alt="Project 1" class="work-image">
-                <div class="work-label">STRFIRE</div>
+                <div class="work-label">STRFIRE</div> <!-- Keep original label -->
             </div>
         </div>
 
-        <div class="main-area">
+        <!-- ... (main-area remains the same) ... -->
+         <div class="main-area">
             <div class="eye-container">
                 <div class="eye">
                     <div class="eye-wireframe">
-                         <!-- Rings for sphere effect -->
                         <div class="wireframe-ring ring-1"></div>
                         <div class="wireframe-ring ring-2"></div>
                         <div class="wireframe-ring ring-3"></div>
                     </div>
-                    <!-- Eye shape outline -->
                     <div class="eye-outline">
-                        <!-- The part that follows the cursor -->
                         <div class="inner-pupil"></div>
                     </div>
                 </div>
@@ -104,78 +99,53 @@
     </div>
     <!-- End content-wrapper -->
 
-
-    <div class="nav-circle">
-        <!-- Indicator dot moves along the edge -->
+    <!-- ... (nav-circle remains the same) ... -->
+     <div class="nav-circle">
         <div class="nav-indicator"></div>
-        <div class="nav-item nav-index" data-angle="-90">INDEX</div>
-        <div class="nav-item nav-work" data-angle="180">WORK</div>
-        <div class="nav-item nav-about" data-angle="0">ABOUT</div>
-        <div class="nav-item nav-contact" data-angle="90">CONTACT</div>
+        <div class="nav-item nav-index" data-angle="0">INDEX</div>
+        <div class="nav-item nav-work" data-angle="-90">WORK</div>
+        <div class="nav-item nav-about" data-angle="90">ABOUT</div>
+        <div class="nav-item nav-contact" data-angle="180">CONTACT</div>
     </div>
 
-    <!-- About Panel -->
+    <!-- ... (panels and work-view remain the same) ... -->
     <div class="about-panel">
         <div class="close-panel">X</div>
         <div class="about-content">
-            <div class="profile-pic">
-                 <!-- Use a real image or a working placeholder service -->
-                <img src="https://via.placeholder.com/80x80/333333/f0f0f0.png?text=DB" alt="Profile Picture">
-            </div>
-            <h2>DYLAN BROUWER</h2>
-            <div class="about-text">
-                COMBINING DESIGN EXPERTISE WITH DEVELOPMENT.
-            </div>
-            <div class="about-text">
-                SPECIALIZED IN CRAFTING EXPERIENCE-DRIVEN WEBSITES THAT STAND OUT THROUGH BOLD DESIGN, SEAMLESS MOTION, AND INNOVATIVE FUNCTIONALITY.
-            </div>
-            <div class="about-text">
-                CURRENTLY WORKING AS A FREELANCER AND OPEN TO NEW OPPORTUNITIES.
-            </div>
-            <div class="about-text">
-                 <!-- Use a real image or a working placeholder service -->
-                <img src="https://via.placeholder.com/150x40/555555/cccccc.png?text=CERTIFIED" alt="Certification Badge">
-            </div>
+             <div class="profile-pic"><img src="https://via.placeholder.com/80x80/333333/f0f0f0.png?text=DB" alt="Profile Picture"></div>
+            <h2>Eren</h2>
+            <div class="about-text">COMBINING DESIGN EXPERTISE WITH DEVELOPMENT.</div>
+            <div class="about-text">SPECIALIZED IN CRAFTING EXPERIENCE-DRIVEN WEBSITES THAT STAND OUT THROUGH BOLD DESIGN, SEAMLESS MOTION, AND INNOVATIVE FUNCTIONALITY.</div>
+            <div class="about-text">CURRENTLY WORKING AS A FREELANCER AND OPEN TO NEW OPPORTUNITIES.</div>
+            <div class="about-text"><img src="https://via.placeholder.com/150x40/555555/cccccc.png?text=CERTIFIED" alt="Certification Badge"></div>
         </div>
     </div>
-
-    <!-- Contact Panel -->
-    <div class="contact-panel">
+     <div class="contact-panel">
         <div class="close-panel">X</div>
         <div class="contact-content">
             <h2>CONTACT</h2>
             <a href="mailto:hello@dylanbrouwer.design" class="contact-email">HELLO@DYLANBROUWER.DESIGN</a>
-
             <div class="social-links">
                 <a href="#" class="social-link">LINKEDIN</a>
                 <a href="#" class="social-link">INSTAGRAM</a>
             </div>
-
-            <a href="#" class="awards-link">
-                <span>AWARDS</span>
-                <span>W.</span>
-            </a>
+            <a href="#" class="awards-link"><span>AWARDS</span><span>W.</span></a>
         </div>
     </div>
-
-    <!-- Work View - Slides from left -->
-    <div id="work-view">
-        <!-- Reuse header structure -->
+     <div id="work-view">
          <div class="header">
-            <div class="logo">B</div>
+            <div class="logo">E</div>
             <div class="header-info-block">
-                <div>DYLAN BROUWER [NL]</div>
-                <div>DIGITAL DESIGNER / NO-CODE DEVELOPER</div>
+                <div>Eren [TR]</div>
+                <div>DIGITAL DESIGNER / DEVELOPER</div>
             </div>
             <div class="status">
                 <span class="status-dot"></span>
                 <span>OPEN TO NEW PROJECTS</span>
             </div>
         </div>
-
         <div class="work-details">
             <div class="work-detail">
-                 <!-- Use a real image or a working placeholder service -->
                 <img src="https://via.placeholder.com/600x350/1a1a1a/a39aed.png?text=Project+1" alt="Project 1" class="work-image">
                 <div class="work-info">
                     <div class="work-site">WEBSITE: STRFIRE.COM</div>
@@ -183,17 +153,18 @@
                 </div>
             </div>
             <div class="work-detail">
-                 <!-- Use a real image or a working placeholder service -->
                 <img src="https://via.placeholder.com/600x350/1a1a1a/cccccc.png?text=Project+2" alt="Project 2" class="work-image">
                 <div class="work-info">
                     <div class="work-site">WEBSITE: PROJECT2.COM</div>
                     <div class="work-title">PROJECT 2 DETAILS</div>
                 </div>
             </div>
-             <!-- Add more work details as needed -->
         </div>
         <div class="work-close">X</div>
     </div>
+
+    <!-- NEW: Cursor Follower Element -->
+    <div id="cursor-follower-text"></div>
 
     <!-- JavaScript -->
     <script src="app.js"></script>

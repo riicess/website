@@ -1126,3 +1126,45 @@ body {
     #mood-selector p { font-size: 12px; text-align: center; padding: 0 20px; }
     .eye-container { width: 250px; height: 250px; } /* Smaller eye */
 }
+
+/* --- CURSOR FOLLOWER TEXT STYLES --- */
+#cursor-follower-text {
+    position: fixed; /* Position relative to viewport */
+    top: 0;          /* Will be updated by JS */
+    left: 0;         /* Will be updated by JS */
+    background-color: var(--text-color); /* Use theme variables */
+    color: var(--bg-color);             /* Use theme variables */
+    padding: 4px 10px; /* Adjust padding */
+    border-radius: 4px;
+    font-size: 10px;
+    font-family: monospace;
+    text-transform: uppercase;
+    white-space: nowrap;
+    z-index: 1100; /* Above everything else */
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none; /* Doesn't block clicks/hovers below it */
+    transform: translate(15px, 15px); /* Initial offset from cursor */
+    transition: opacity 0.2s ease, visibility 0s linear 0.2s; /* Fade transition */
+}
+
+#cursor-follower-text.active {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.2s ease, visibility 0s linear 0s; /* Fade in */
+}
+
+/* Ensure theme colors apply */
+.light-theme #cursor-follower-text {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+}
+.spark-theme #cursor-follower-text {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+}
+
+/* Add cursor pointer to the trigger elements */
+.interactive-hover-trigger {
+    cursor: pointer;
+}

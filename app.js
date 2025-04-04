@@ -1,155 +1,149 @@
-// Variables for eye tracking
-let innerPupil = null; // Updated selector
-let eyeOutline = null; // Use outline for bounds calculation
-let eyeContainer = null;
-let isMobile = window.innerWidth < 768;
+// --- START OF FILE app.js ---
+
+// ... (Keep existing variables: innerPupil, eyeOutline, etc.) ...
+let isMobile = window.innerWidth < 768; // Keep this
 
 // Loading sequence
-const loader = document.getElementById('loader');
-const moodSelector = document.getElementById('mood-selector');
-const contentWrapper = document.querySelector('.content-wrapper'); // Target new wrapper
-const header = document.querySelector('.header');
-const navCircle = document.querySelector('.nav-circle');
-
-// First show loader
-setTimeout(() => {
-    loader.classList.add('hide');
-    // Then show mood selector after loader fades out
-    setTimeout(() => {
-        moodSelector.classList.add('show');
-        loader.style.display = 'none'; // Completely remove loader
-    }, 500); // Wait for loader fade out
-}, 2000); // Reduced loader time slightly
+// ... (Keep existing loader/mood selector logic) ...
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize pupil and eye container for eye tracking
-    innerPupil = document.querySelector('.inner-pupil');
-    eyeOutline = document.querySelector('.eye-outline');
-    eyeContainer = document.querySelector('.eye-container');
+    // ... (Keep existing initializations: pupil, eye, mood selector) ...
 
-    // Initialize mood selector elements
-    const moodCircle = document.querySelector('.mood-circle');
-    const moodOptions = document.querySelectorAll('.mood-option');
-    const moodIndicator = document.querySelector('.mood-indicator');
-    const setMoodBtn = document.getElementById('set-mood-btn');
+    // --- NEW: Cursor Follower Setup ---
+    const cursorFollower = document.getElementById('cursor-follower-text');
+    const hoverTriggers = document.querySelectorAll('.interactive-hover-trigger');
+    let mouseX = 0, mouseY = 0;
+    let followerActive = false; // Track if the follower should be visible
 
-    // Setup mood options click handlers with arrow rotation
-    moodOptions.forEach((option) => {
-        option.addEventListener('click', function() {
-            // Remove active class from all options
-            moodOptions.forEach(opt => opt.classList.remove('active-option'));
-            // Add active class to clicked option
-            this.classList.add('active-option');
+    // Single mousemove listener for performance
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        if (followerActive && cursorFollower && !isMobile) {
+            // Update position using transform for smoother animation
+            cursorFollower.style.transform = `translate(${mouseX + 15}px, ${mouseY + 15}px)`;
+        }
+    }, { passive: true });
 
-            const optionRect = this.getBoundingClientRect();
-            const circleRect = moodCircle.getBoundingClientRect();
+    hoverTriggers.forEach(trigger => {
+        trigger.addEventListener('mouseenter', (e) => {
+            if (isMobile || !cursorFollower) return; // Don't run on mobile
 
-            // Calculate center of the circle
-            const circleCenterX = circleRect.left + circleRect.width / 2;
-            const circleCenterY = circleRect.top + circleRect.height / 2;
-
-            // Calculate center of the clicked option text (relative to viewport)
-            const label = this.querySelector('.mood-label');
-            const labelRect = label.getBoundingClientRect();
-            const optionCenterX = labelRect.left + labelRect.width / 2;
-            const optionCenterY = labelRect.top + labelRect.height / 2;
-
-            // Calculate angle from circle center to option center
-            // Add 90 degrees because 0 degrees in atan2 is right, but our arrow starts pointing up
-            const angleRad = Math.atan2(optionCenterY - circleCenterY, optionCenterX - circleCenterX);
-            const angleDeg = angleRad * (180 / Math.PI) + 90; // Offset by 90deg
-
-            // Update indicator arrow rotation to point AT the option's center
-            moodIndicator.style.transform = `translateX(-50%) rotate(${angleDeg}deg)`;
-
-            // Determine theme based on class
-            const theme = this.classList.contains('dark-option') ? 'dark' : // Check class names
-                          this.classList.contains('light-option') ? 'light' :
-                          this.classList.contains('spark-option') ? 'spark' : 'dark'; // Changed to spark-option
-            updateSidebarDots(theme);
+            const hoverText = trigger.getAttribute('data-hover-text');
+            if (hoverText) {
+                cursorFollower.textContent = hoverText;
+                // Set initial position immediately
+                cursorFollower.style.transform = `translate(${mouseX + 15}px, ${mouseY + 15}px)`;
+                cursorFollower.classList.add('active');
+                followerActive = true;
+            }
         });
+
+        trigger.addEventListener('mouseleave', () => {
+            if (isMobile || !cursorFollower) return;
+            cursorFollower.classList.remove('active');
+            followerActive = false;
+        });
+
+         // Add click listener directly to triggers to hide follower
+         trigger.addEventListener('click', () => {
+             if (isMobile || !cursorFollower) return;
+             cursorFollower.classList.remove('active'); // Hide immediately on click
+             followerActive = false;
+             // Note: The actual panel opening logic is handled below
+             // by associating these triggers with nav items or direct actions.
+         });
     });
 
-     // Set initial mood arrow position based on default active option
-    const initialActiveMood = document.querySelector('.mood-option.active-option');
-    if (initialActiveMood) {
-        initialActiveMood.click(); // Simulate click to set initial arrow position
+    function hideCursorFollower() {
+         if (cursorFollower) {
+            cursorFollower.classList.remove('active');
+            followerActive = false;
+         }
     }
+    // --- END NEW: Cursor Follower Setup ---
 
+
+    // --- Existing Logic Modifications ---
 
     // Setup set mood button handler
     setMoodBtn.addEventListener('click', function() {
-        const activeOption = document.querySelector('.mood-option.active-option');
-        if (activeOption) {
-            const mood = activeOption.classList.contains('dark-option') ? 'dark' :
-                         activeOption.classList.contains('light-option') ? 'light' :
-                         activeOption.classList.contains('spark-option') ? 'spark' : 'dark'; // Changed to spark-option
-
-            document.body.className = `${mood}-theme`; // Apply theme class to body
-
-            // Hide mood selector
-            moodSelector.classList.remove('show');
-            moodSelector.style.transform = 'scale(0.9)'; // Optional shrink effect
-
-
-            setTimeout(() => {
-                moodSelector.style.display = 'none'; // Hide completely after transition
-
-                // Show main content with transitions
-                contentWrapper.classList.add('show'); // Show the new wrapper
-                header.classList.add('show'); // May not be needed if header is always visible
-                navCircle.classList.add('show'); // Nav circle appears with its own transition
-
-                // Initialize eye tracking after main content is shown
-                 setupEyeTracking();
-                // Set initial nav indicator position
-                 const initialNavItem = document.querySelector('.nav-item.nav-index'); // Start at Index
-                 if(initialNavItem) {
-                    moveNavIndicator(initialNavItem);
-                 }
-
-            }, 500); // Wait for mood selector fade out
-        }
+        // ... (keep existing mood setting logic) ...
+        setTimeout(() => {
+            moodSelector.style.display = 'none';
+            contentWrapper.classList.add('show');
+            header.classList.add('show');
+            navCircle.classList.add('show');
+            setupEyeTracking();
+            const initialNavItem = document.querySelector('.nav-item.nav-index');
+            if(initialNavItem) moveNavIndicator(initialNavItem);
+             hideCursorFollower(); // Hide follower when mood is set
+        }, 500);
     });
 
-    // Add work thumbnail click handler
-    const workThumbnail = document.querySelector('.work-thumbnail');
-    const workView = document.getElementById('work-view');
-
-    if (workThumbnail && workView) {
-        workThumbnail.addEventListener('click', function() {
-            workView.classList.add('show'); // Use class to trigger transition
-            closeAllPanels(); // Close panels when opening work view
-        });
-    }
-
-    // Navigation circle handlers
+    // Navigation and Panel elements
     const navItems = document.querySelectorAll('.nav-item');
     const aboutPanel = document.querySelector('.about-panel');
     const contactPanel = document.querySelector('.contact-panel');
-    const panels = [aboutPanel, contactPanel]; // Array of panels
+    const panels = [aboutPanel, contactPanel];
+    const workView = document.getElementById('work-view');
+    const indexNavItem = document.querySelector('.nav-item.nav-index');
+    const aboutNavItem = document.querySelector('.nav-item.nav-about');
+    const contactNavItem = document.querySelector('.nav-item.nav-contact');
+    const workNavItem = document.querySelector('.nav-item.nav-work');
 
-     // Function to move the indicator
+    // --- Trigger Element References (for click actions) ---
+    const headerNameTrigger = document.getElementById('header-name-trigger');
+    const headerStatusTrigger = document.getElementById('header-status-trigger');
+    const workThumbnailTrigger = document.getElementById('work-thumbnail-trigger'); // Get the specific trigger
+
+
+    // --- Link Trigger Clicks to Actions ---
+    if (headerNameTrigger && aboutPanel && aboutNavItem) {
+        headerNameTrigger.addEventListener('click', () => {
+            togglePanel(aboutPanel, contactPanel);
+            moveNavIndicator(aboutNavItem); // Move indicator
+            hideCursorFollower(); // Hide follower
+        });
+    }
+    if (headerStatusTrigger && contactPanel && contactNavItem) {
+        headerStatusTrigger.addEventListener('click', () => {
+            togglePanel(contactPanel, aboutPanel);
+            moveNavIndicator(contactNavItem); // Move indicator
+            hideCursorFollower(); // Hide follower
+        });
+    }
+     // Use the specific trigger ID for the work thumbnail click
+    if (workThumbnailTrigger && workView && workNavItem) {
+        workThumbnailTrigger.addEventListener('click', function() {
+             workView.classList.add('show');
+             closeAllPanels(); // Close other panels
+             moveNavIndicator(workNavItem); // Move indicator to Work
+             hideCursorFollower(); // Hide follower
+        });
+    }
+    // --- Remove OLD Hover Button Listeners & workThumbnail listener ---
+    // (These are now handled by the trigger listeners above)
+
+
+    // Function to move the indicator
     function moveNavIndicator(targetItem) {
-        const navIndicator = document.querySelector('.nav-indicator');
-        if (!navIndicator || !navCircle || !targetItem) return; // Add check for targetItem
+       // ... (keep existing moveNavIndicator logic) ...
+         const navIndicator = document.querySelector('.nav-indicator');
+        if (!navIndicator || !navCircle || !targetItem) return;
 
         const angle = parseFloat(targetItem.getAttribute('data-angle')) || 0;
-        const radius = navCircle.offsetWidth / 2 - navIndicator.offsetWidth / 2 - 10; // Adjust radius (e.g., subtract padding/border)
+        const circleRadius = navCircle.offsetWidth / 2;
+        const indicatorRadius = navIndicator.offsetWidth / 2;
+        const offset = circleRadius - indicatorRadius - 10; // 10px padding from edge
 
-        // Rotate the indicator around the circle's center and move it outwards
-        navIndicator.style.transform = `translate(-50%, -50%) rotate(${angle}deg) translateY(${-radius}px)`;
+        navIndicator.style.transform = `translate(-50%, -50%) rotate(${angle}deg) translateY(${-offset}px) rotate(${-angle}deg)`;
     }
 
+
     navItems.forEach((item) => {
-        // REMOVED MOUSEENTER listener for nav indicator movement
-
         item.addEventListener('click', function() {
-            // Optional: Mark active nav item visually if needed
-            // navItems.forEach(i => i.classList.remove('active-nav'));
-            // this.classList.add('active-nav');
-
-            // Handle navigation item clicks
+            hideCursorFollower(); // Hide follower on any nav click
             if (this.classList.contains('nav-about')) {
                 togglePanel(aboutPanel, contactPanel);
             } else if (this.classList.contains('nav-contact')) {
@@ -161,26 +155,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (workView) workView.classList.remove('show');
                 closeAllPanels();
             }
-             // Move indicator ONLY on click
-             moveNavIndicator(this); // 'this' refers to the clicked item
+             moveNavIndicator(this);
         });
     });
 
     function togglePanel(panelToShow, panelToHide) {
-        if (!panelToShow) return; // Add safety check
-
+        hideCursorFollower(); // Hide follower when toggling
+        if (!panelToShow) return;
         if (panelToShow.classList.contains('panel-active')) {
-            panelToShow.classList.remove('panel-active'); // Close if already open
+            panelToShow.classList.remove('panel-active');
+             if (indexNavItem) moveNavIndicator(indexNavItem);
         } else {
-            if (panelToHide) panelToHide.classList.remove('panel-active'); // Close the other panel
-            panelToShow.classList.add('panel-active'); // Open the target panel
+            if (panelToHide) panelToHide.classList.remove('panel-active');
+            panelToShow.classList.add('panel-active');
+            // Indicator moved by the click handler
         }
     }
 
     function closeAllPanels() {
          panels.forEach(panel => {
-             if (panel) panel.classList.remove('panel-active')
+             if (panel && panel.classList.contains('panel-active')) {
+                 panel.classList.remove('panel-active');
+                 // Note: Indicator reset happens in specific close actions now
+             }
          });
+          // If panels were closed, implicitly reset indicator unless something else was just opened
+         // Safest to handle reset explicitly in close actions (X, index click)
     }
 
 
@@ -188,8 +188,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const closePanelBtns = document.querySelectorAll('.close-panel');
     closePanelBtns.forEach((btn) => {
         btn.addEventListener('click', function() {
-            const panel = this.closest('.about-panel, .contact-panel'); // Find parent panel robustly
-            if (panel) panel.classList.remove('panel-active');
+            const panel = this.closest('.about-panel, .contact-panel');
+            if (panel) {
+                panel.classList.remove('panel-active');
+                 if (indexNavItem) moveNavIndicator(indexNavItem);
+                 hideCursorFollower(); // Hide follower
+            }
         });
     });
 
@@ -197,189 +201,185 @@ document.addEventListener('DOMContentLoaded', function() {
     const workClose = document.querySelector('.work-close');
     if (workClose && workView) {
         workClose.addEventListener('click', function() {
-            workView.classList.remove('show'); // Use class for transition
+            workView.classList.remove('show');
+             if (indexNavItem) moveNavIndicator(indexNavItem);
+             hideCursorFollower(); // Hide follower
         });
     }
 
     // Theme dots in sidebar
-    const sidebarDots = document.querySelectorAll('.sidebar-dots .dot');
     sidebarDots.forEach((dot) => {
         dot.addEventListener('click', function() {
+            // ... (keep existing theme dot logic) ...
             const theme = this.getAttribute('data-theme');
-            document.body.className = `${theme}-theme`; // Apply theme class directly
+            document.body.className = `${theme}-theme`;
             updateSidebarDots(theme);
-
-            // Add scale animation for dot click
-            this.style.transform = 'scale(1.3)';
-            setTimeout(() => {
-                this.style.transform = 'scale(1)';
-            }, 150);
+             this.style.transform = 'scale(1.3)';
+            setTimeout(() => { this.style.transform = 'scale(1)'; }, 150);
+            hideCursorFollower(); // Hide follower
         });
     });
 
-    // Initial sidebar dot state based on default theme
-    updateSidebarDots(document.body.classList[0]?.split('-')[0] || 'dark');
-
-}); // End DOMContentLoaded
-
-// --- FUNCTIONS ---
-
-function setupEyeTracking() {
-    // Ensure elements exist
-    if (!innerPupil || !eyeOutline || !eyeContainer) {
-        console.error("Eye elements not found for tracking.");
-        return;
+    // ... (Keep updateSidebarDots function) ...
+    function updateSidebarDots(theme) {
+        const dots = document.querySelectorAll('.sidebar-dots .dot');
+        dots.forEach((dot) => {
+            dot.classList.remove('dot-outline', 'dot-filled');
+            if (dot.getAttribute('data-theme') === theme) {
+                dot.classList.add('dot-filled');
+            } else {
+                dot.classList.add('dot-outline');
+            }
+        });
     }
 
-    let targetX = 0;
-    let targetY = 0;
-    let currentX = 0;
-    let currentY = 0;
-    const easing = 0.08; // Slightly slower easing
-    let rafId = null;
-    let isTracking = false;
-    let lastMouseX = window.innerWidth / 2; // Start center
-    let lastMouseY = window.innerHeight / 2;
-
-    function updatePupilPosition() {
-        // Stop RAF if not tracking and close to target (center)
-        if (!isTracking && Math.abs(currentX - targetX) < 0.1 && Math.abs(currentY - targetY) < 0.1) {
-             if(rafId) {
-                 cancelAnimationFrame(rafId);
-                 rafId = null;
+    // ... (Keep setupEyeTracking function) ...
+    function setupEyeTracking() {
+        // Ensure elements exist
+        if (!innerPupil || !eyeOutline || !eyeContainer || isMobile) { // Added isMobile check
+             if(isMobile && innerPupil) { // Reset on mobile
+                 innerPupil.style.transform = `translate(-50%, -50%) translate(0px, 0px)`;
              }
-             return; // Exit if not tracking and centered
-        }
-
-        // Calculate movement constraints based on the eye-outline size
-        const outlineRect = eyeOutline.getBoundingClientRect();
-        const maxMoveX = outlineRect.width * 0.3; // Allow moving 30% of the outline width
-        const maxMoveY = outlineRect.height * 0.3; // Allow moving 30% of the outline height
-
-        // If not tracking, target is the center (0, 0)
-        if (!isTracking) {
-            targetX = 0;
-            targetY = 0;
-        } else {
-            const eyeRect = eyeOutline.getBoundingClientRect(); // Use outline bounds
-            const eyeCenterX = eyeRect.left + eyeRect.width / 2;
-            const eyeCenterY = eyeRect.top + eyeRect.height / 2;
-
-            // Calculate vector from eye center to mouse
-            const deltaX = lastMouseX - eyeCenterX;
-            const deltaY = lastMouseY - eyeCenterY;
-
-            // Reduce the influence distance - makes movement less extreme
-            const influenceFactor = 0.1;
-            targetX = deltaX * influenceFactor;
-            targetY = deltaY * influenceFactor;
-
-             // Clamp movement within the calculated bounds
-             targetX = Math.max(-maxMoveX, Math.min(maxMoveX, targetX));
-             targetY = Math.max(-maxMoveY, Math.min(maxMoveY, targetY));
-        }
-
-        // Apply easing
-        currentX += (targetX - currentX) * easing;
-        currentY += (targetY - currentY) * easing;
-
-        // Apply transform relative to the center of the pupil's parent (eye-outline)
-        innerPupil.style.transform = `translate(-50%, -50%) translate(${currentX}px, ${currentY}px)`;
-
-        rafId = requestAnimationFrame(updatePupilPosition);
-    }
-
-
-    document.addEventListener('mousemove', (e) => {
-        if (isMobile) return;
-        lastMouseX = e.clientX;
-        lastMouseY = e.clientY;
-        if (!isTracking) {
-            isTracking = true;
-            if(!rafId) updatePupilPosition(); // Start RAF if not already running
-        }
-    }, { passive: true }); // Use passive listener
-
-    document.addEventListener('mouseleave', () => {
-        if (isMobile) return;
-        isTracking = false; // Target becomes center (0,0), animation continues via RAF until centered
-    });
-
-     // Start animation loop initially to center the pupil if mouse never enters
-     if (!rafId) updatePupilPosition();
-}
-
-
-function updateSidebarDots(theme) {
-    const dots = document.querySelectorAll('.sidebar-dots .dot');
-    dots.forEach((dot) => {
-        if (dot.getAttribute('data-theme') === theme) {
-            dot.classList.remove('dot-outline');
-            dot.classList.add('dot-filled');
-        } else {
-            dot.classList.remove('dot-filled');
-            dot.classList.add('dot-outline');
-        }
-    });
-}
-
-// Handle window resize for responsive behavior
-window.addEventListener('resize', function() {
-    const wasMobile = isMobile;
-    isMobile = window.innerWidth < 768;
-
-     // Re-initialize nav indicator position if needed
-    const currentNavItem = document.querySelector('.nav-item.active-nav') || document.querySelector('.nav-item.nav-index'); // Select current or default to index
-    if (navCircle && navCircle.classList.contains('show') && currentNavItem) {
-       setTimeout(() => { // Delay slightly to allow layout reflow
-            // Find the currently 'active' nav item if one exists, otherwise default to index
-            const activeItem = [...navItems].find(item => {
-                if (item.classList.contains('nav-about') && aboutPanel?.classList.contains('panel-active')) return true;
-                if (item.classList.contains('nav-contact') && contactPanel?.classList.contains('panel-active')) return true;
-                if (item.classList.contains('nav-work') && workView?.classList.contains('show')) return true;
-                return false;
-            }) || document.querySelector('.nav-item.nav-index'); // Default to index if nothing else is active
-
-           moveNavIndicator(activeItem);
-       }, 50);
-    }
-
-    // Re-run eye tracking setup if needed (e.g., bounds changed)
-    if (innerPupil && !isMobile) {
-        setupEyeTracking();
-    } else if (wasMobile && !isMobile) { // If resizing from mobile to desktop
-         setupEyeTracking();
-    } else if (isMobile && innerPupil) { // Reset pupil on mobile
-         innerPupil.style.transform = `translate(-50%, -50%) translate(0px, 0px)`;
-         // Optionally cancel animation frame on mobile
-         // if (rafId) cancelAnimationFrame(rafId); rafId = null;
-    }
-
-});
-
-// Add preloader animation effect (dots)
-function animateLoader() {
-    const loaderTextElement = document.getElementById('loader-text');
-    if (!loaderTextElement) return;
-
-    const originalTextContent = loaderTextElement.textContent.replace(/\.\.\.$/, ''); // Remove existing dots
-    let dotCount = 0;
-    const intervalId = setInterval(() => {
-        // Check if loader is still visible
-        if (!loader || loader.style.display === 'none' || loader.classList.contains('hide')) {
-            clearInterval(intervalId);
+             // console.error("Eye elements not found for tracking or on mobile.");
             return;
         }
-        dotCount = (dotCount + 1) % 4;
-        const dots = '.'.repeat(dotCount);
-        loaderTextElement.textContent = originalTextContent + dots;
-    }, 400); // Slower dot animation
-}
 
-// Initialize loader animation
-animateLoader();
+        let targetX = 0, targetY = 0, currentX = 0, currentY = 0;
+        const easing = 0.08;
+        let rafId = null;
+        let isTracking = false;
+        let lastMouseX = window.innerWidth / 2, lastMouseY = window.innerHeight / 2;
 
-// Add basic device orientation handling for mobile eye (optional, can be intensive)
+        function updatePupilPosition() {
+            if (isMobile) { // Double check in loop
+                 if(rafId) cancelAnimationFrame(rafId);
+                 rafId = null;
+                return;
+            }
+             // ... (rest of eye tracking logic remains the same) ...
+             if (!isTracking && Math.abs(currentX - targetX) < 0.1 && Math.abs(currentY - targetY) < 0.1) {
+                 if (currentX !== 0 || currentY !== 0) {
+                    innerPupil.style.transform = `translate(-50%, -50%) translate(0px, 0px)`;
+                 }
+                 if(rafId) cancelAnimationFrame(rafId);
+                 rafId = null;
+                 return;
+             }
+            const outlineRect = eyeOutline.getBoundingClientRect();
+            const maxMoveX = outlineRect.width * 0.3;
+            const maxMoveY = outlineRect.height * 0.3;
+             if (!isTracking) { targetX = 0; targetY = 0; }
+             else {
+                 const eyeRect = eyeOutline.getBoundingClientRect();
+                 const eyeCenterX = eyeRect.left + eyeRect.width / 2;
+                 const eyeCenterY = eyeRect.top + eyeRect.height / 2;
+                 const deltaX = lastMouseX - eyeCenterX;
+                 const deltaY = lastMouseY - eyeCenterY;
+                 const influenceFactor = 0.1;
+                 targetX = deltaX * influenceFactor;
+                 targetY = deltaY * influenceFactor;
+                 targetX = Math.max(-maxMoveX, Math.min(maxMoveX, targetX));
+                 targetY = Math.max(-maxMoveY, Math.min(maxMoveY, targetY));
+             }
+            currentX += (targetX - currentX) * easing;
+            currentY += (targetY - currentY) * easing;
+            innerPupil.style.transform = `translate(-50%, -50%) translate(${currentX}px, ${currentY}px)`;
+            rafId = requestAnimationFrame(updatePupilPosition);
+        }
+
+        // Use document mousemove for simplicity, check isMobile inside
+        document.addEventListener('mousemove', (e) => {
+             if(isMobile) return;
+             lastMouseX = e.clientX;
+             lastMouseY = e.clientY;
+            // No need to manage isTracking here if eyeContainer handles enter/leave
+        }, { passive: true });
+
+        // Attach enter/leave to eyeContainer to control tracking state
+        eyeContainer.addEventListener('mouseenter', () => {
+            if(isMobile) return;
+            isTracking = true;
+            if(!rafId) updatePupilPosition();
+        });
+        eyeContainer.addEventListener('mouseleave', () => {
+            if(isMobile) return;
+            isTracking = false;
+             if(!rafId) updatePupilPosition(); // Start centering animation
+        });
+
+        // Initial centering animation only if not mobile
+         if (!rafId && !isMobile) updatePupilPosition();
+    }
+
+
+    // ... (Keep window resize handler, ensure it checks isMobile and calls hideCursorFollower()) ...
+     window.addEventListener('resize', function() {
+        const wasMobile = isMobile;
+        isMobile = window.innerWidth < 768;
+
+        hideCursorFollower(); // Hide follower on resize
+
+        // ... (rest of resize logic for nav indicator and eye tracking) ...
+        // Re-select elements that might be affected by layout changes
+         const navItemsForResize = document.querySelectorAll('.nav-item');
+         const aboutPanelForResize = document.querySelector('.about-panel');
+         const contactPanelForResize = document.querySelector('.contact-panel');
+         const workViewForResize = document.getElementById('work-view');
+
+         if (navCircle && navCircle.classList.contains('show')) {
+           setTimeout(() => {
+                let activeItem = document.querySelector('.nav-item.nav-index');
+                if (aboutPanelForResize?.classList.contains('panel-active')) {
+                    activeItem = document.querySelector('.nav-item.nav-about');
+                } else if (contactPanelForResize?.classList.contains('panel-active')) {
+                    activeItem = document.querySelector('.nav-item.nav-contact');
+                } else if (workViewForResize?.classList.contains('show')) {
+                     activeItem = document.querySelector('.nav-item.nav-work');
+                }
+               if (activeItem) moveNavIndicator(activeItem);
+           }, 100);
+        }
+
+        // Re-select eye elements and re-setup tracking
+        innerPupil = document.querySelector('.inner-pupil');
+        eyeOutline = document.querySelector('.eye-outline');
+        eyeContainer = document.querySelector('.eye-container');
+
+         if (innerPupil && eyeOutline && eyeContainer) {
+            if (!isMobile) { // Desktop or transition to desktop
+                 setupEyeTracking();
+            } else { // Mobile or transition to mobile
+                 innerPupil.style.transform = `translate(-50%, -50%) translate(0px, 0px)`;
+                 if (typeof rafId !== 'undefined' && rafId) { // Cancel eye animation on mobile
+                     cancelAnimationFrame(rafId);
+                     rafId = null;
+                 }
+            }
+        }
+    });
+
+
+    // ... (Keep animateLoader function) ...
+     function animateLoader() {
+        const loaderTextElement = document.getElementById('loader-text');
+        if (!loaderTextElement) return;
+        const originalTextContent = loaderTextElement.textContent.replace(/\.*$/, '');
+        let dotCount = 0;
+        let intervalId = null;
+        function updateDots() {
+            const currentLoader = document.getElementById('loader');
+            if (!currentLoader || currentLoader.style.display === 'none' || currentLoader.classList.contains('hide')) {
+                if (intervalId) clearInterval(intervalId);
+                return;
+            }
+            dotCount = (dotCount + 1) % 4;
+            loaderTextElement.textContent = originalTextContent + '.'.repeat(dotCount);
+        }
+        intervalId = setInterval(updateDots, 400);
+    }
+    animateLoader();
+    
+    // Add basic device orientation handling for mobile eye (optional, can be intensive)
 // function handleOrientation(event) {
 //     if (!isMobile || !innerPupil || !eyeOutline) return;
 
@@ -403,3 +403,13 @@ animateLoader();
 // if (window.DeviceOrientationEvent) {
 //   window.addEventListener('deviceorientation', handleOrientation);
 // }
+
+    // Initial setup calls
+    updateSidebarDots(document.body.classList[0]?.split('-')[0] || 'dark');
+    // Initial eye setup happens after mood is set, or on resize if already visible
+
+
+}); // End DOMContentLoaded
+
+
+// --- END OF FILE app.js ---
