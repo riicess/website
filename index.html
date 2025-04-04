@@ -14,7 +14,6 @@
     </div>
 
     <!-- Mood Selector -->
-    <!-- ... (mood selector code remains the same) ... -->
     <div id="mood-selector">
          <div class="mood-circle">
             <div class="mood-indicator"></div>
@@ -80,27 +79,38 @@
             </div>
         </div>
 
-        <!-- ... (main-area remains the same) ... -->
-         <div class="main-area">
-            <div class="eye-container">
-                <div class="eye">
-                    <div class="eye-wireframe">
-                        <div class="wireframe-ring ring-1"></div>
-                        <div class="wireframe-ring ring-2"></div>
-                        <div class="wireframe-ring ring-3"></div>
-                    </div>
-                    <div class="eye-outline">
-                        <div class="inner-pupil"></div>
+        <div class="main-area">
+             <!-- NEW 3D Sphere and Eye Structure -->
+            <div class="eye-container"> <!-- Boundary for mouse interaction -->
+                <div class="eye-sphere"> <!-- The 3D rotating element -->
+                    <!-- Wireframe Lines -->
+                    <div class="sphere-line latitude" style="transform: rotateX(0deg);"></div> <!-- Explicitly add 0deg -->
+                    <div class="sphere-line latitude" style="transform: rotateX(30deg);"></div>
+                    <div class="sphere-line latitude" style="transform: rotateX(60deg);"></div>
+                    <div class="sphere-line latitude" style="transform: rotateX(90deg);"></div>
+                    <div class="sphere-line latitude" style="transform: rotateX(120deg);"></div>
+                    <div class="sphere-line latitude" style="transform: rotateX(150deg);"></div>
+
+                    <div class="sphere-line longitude" style="transform: rotateY(0deg);"></div> <!-- Explicitly add 0deg -->
+                    <div class="sphere-line longitude" style="transform: rotateY(30deg);"></div>
+                    <div class="sphere-line longitude" style="transform: rotateY(60deg);"></div>
+                    <div class="sphere-line longitude" style="transform: rotateY(90deg);"></div>
+                    <div class="sphere-line longitude" style="transform: rotateY(120deg);"></div>
+                    <div class="sphere-line longitude" style="transform: rotateY(150deg);"></div>
+
+                    <!-- The Eye -->
+                    <div class="eye">
+                        <div class="pupil"></div>
                     </div>
                 </div>
-                <div class="orbit"></div>
             </div>
+             <!-- End NEW 3D Sphere Structure -->
         </div>
     </div>
     <!-- End content-wrapper -->
 
-    <!-- ... (nav-circle remains the same) ... -->
-     <div class="nav-circle">
+
+    <div class="nav-circle">
         <div class="nav-indicator"></div>
         <div class="nav-item nav-index" data-angle="0">INDEX</div>
         <div class="nav-item nav-work" data-angle="-90">WORK</div>
@@ -108,7 +118,7 @@
         <div class="nav-item nav-contact" data-angle="180">CONTACT</div>
     </div>
 
-    <!-- ... (panels and work-view remain the same) ... -->
+    <!-- About Panel -->
     <div class="about-panel">
         <div class="close-panel">X</div>
         <div class="about-content">
@@ -120,6 +130,8 @@
             <div class="about-text"><img src="https://via.placeholder.com/150x40/555555/cccccc.png?text=CERTIFIED" alt="Certification Badge"></div>
         </div>
     </div>
+
+    <!-- Contact Panel -->
      <div class="contact-panel">
         <div class="close-panel">X</div>
         <div class="contact-content">
@@ -132,6 +144,8 @@
             <a href="#" class="awards-link"><span>AWARDS</span><span>W.</span></a>
         </div>
     </div>
+
+    <!-- Work View -->
      <div id="work-view">
          <div class="header">
             <div class="logo">E</div>
@@ -159,11 +173,12 @@
                     <div class="work-title">PROJECT 2 DETAILS</div>
                 </div>
             </div>
+             <!-- Add more work details as needed -->
         </div>
         <div class="work-close">X</div>
     </div>
 
-    <!-- NEW: Cursor Follower Element -->
+    <!-- Cursor Follower Element -->
     <div id="cursor-follower-text"></div>
 
     <!-- JavaScript -->
