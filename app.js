@@ -1,5 +1,6 @@
 // Variables for eye tracking
-let pupil = null;
+let innerPupil = null; // Updated selector
+let eyeOutline = null; // Use outline for bounds calculation
 let eyeContainer = null;
 let isMobile = window.innerWidth < 768;
 
@@ -17,269 +18,298 @@ setTimeout(() => {
     setTimeout(() => {
         moodSelector.classList.add('show');
         loader.style.display = 'none'; // Completely remove loader
-    }, 500);
-}, 2500);
+    }, 500); // Wait for loader fade out
+}, 2000); // Reduced loader time slightly
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize pupil and eye container for eye tracking
-    pupil = document.querySelector('.pupil');
+    innerPupil = document.querySelector('.inner-pupil');
+    eyeOutline = document.querySelector('.eye-outline');
     eyeContainer = document.querySelector('.eye-container');
-    
+
     // Initialize mood selector elements
+    const moodCircle = document.querySelector('.mood-circle');
     const moodOptions = document.querySelectorAll('.mood-option');
     const moodIndicator = document.querySelector('.mood-indicator');
     const setMoodBtn = document.getElementById('set-mood-btn');
-    
-    // Setup mood options click handlers with improved clock-like behavior
+
+    // Setup mood options click handlers with arrow rotation
     moodOptions.forEach((option) => {
         option.addEventListener('click', function() {
             // Remove active class from all options
             moodOptions.forEach(opt => opt.classList.remove('active-option'));
             // Add active class to clicked option
             this.classList.add('active-option');
-            
-            // Get position for clock-like behavior
+
             const optionRect = this.getBoundingClientRect();
-            const circleRect = document.querySelector('.mood-circle').getBoundingClientRect();
-            
+            const circleRect = moodCircle.getBoundingClientRect();
+
+            // Calculate center of the circle
             const circleCenterX = circleRect.left + circleRect.width / 2;
             const circleCenterY = circleRect.top + circleRect.height / 2;
-            
+
+            // Calculate center of the clicked option (relative to viewport)
             const optionCenterX = optionRect.left + optionRect.width / 2;
             const optionCenterY = optionRect.top + optionRect.height / 2;
-            
-            // Calculate precise angle using atan2
-            const angle = Math.atan2(optionCenterY - circleCenterY, optionCenterX - circleCenterX);
-            const angleDeg = angle * (180 / Math.PI);
-            
-            // Update indicator with smooth transition
-            moodIndicator.style.transform = `rotate(${angleDeg}deg)`;
-            
+
+            // Calculate angle from circle center to option center
+            // Add 90 degrees because 0 degrees in atan2 is right, but our arrow starts pointing up
+            const angleRad = Math.atan2(optionCenterY - circleCenterY, optionCenterX - circleCenterX);
+            const angleDeg = angleRad * (180 / Math.PI) + 90; // Offset by 90deg
+
+            // Update indicator arrow rotation
+            moodIndicator.style.transform = `translateX(-50%) rotate(${angleDeg}deg)`;
+
             // Update sidebar dots to match selected mood
-            const theme = this.classList[1].split('-')[0];
+            const theme = this.classList.contains('dark-option') ? 'dark' :
+                          this.classList.contains('light-option') ? 'light' :
+                          this.classList.contains('spring-option') ? 'spring' : 'dark'; // Default to dark
             updateSidebarDots(theme);
         });
     });
-    
-    // Setup set mood button handler with improved transitions
+
+     // Set initial mood arrow position based on default active option
+    const initialActiveMood = document.querySelector('.mood-option.active-option');
+    if (initialActiveMood) {
+        initialActiveMood.click(); // Simulate click to set initial arrow position
+    }
+
+
+    // Setup set mood button handler
     setMoodBtn.addEventListener('click', function() {
         const activeOption = document.querySelector('.mood-option.active-option');
         if (activeOption) {
-            const mood = activeOption.classList[1].split('-')[0];
-            document.body.className = `${mood}-theme`;
-            
-            // Smoother transitions
-            moodSelector.style.transform = 'scale3d(0.9, 0.9, 1)';
-            moodSelector.style.opacity = '0';
-            
+            const mood = activeOption.classList.contains('dark-option') ? 'dark' :
+                         activeOption.classList.contains('light-option') ? 'light' :
+                         activeOption.classList.contains('spring-option') ? 'spring' : 'dark'; // Default to dark
+
+            document.body.className = `${mood}-theme`; // Apply theme class to body
+
+            // Hide mood selector
+            moodSelector.classList.remove('show');
+            moodSelector.style.transform = 'scale(0.9)'; // Optional shrink effect
+
+
             setTimeout(() => {
-                moodSelector.classList.remove('show');
-                moodSelector.style.transform = '';
-                moodSelector.style.opacity = '';
-                
-                // Show main content with enhanced transitions
+                moodSelector.style.display = 'none'; // Hide completely after transition
+
+                // Show main content with transitions
                 mainContent.classList.add('show');
                 header.classList.add('show');
-                
-                // Add 3D scale effect for nav circle appearance
-                navCircle.style.transform = 'scale3d(0, 0, 1)';
-                navCircle.classList.add('show');
-                
-                setTimeout(() => {
-                    navCircle.style.transform = 'scale3d(1, 1, 1)';
-                }, 50);
-                
+                navCircle.classList.add('show'); // Nav circle appears with its own transition
+
                 // Initialize eye tracking after main content is shown
                 setupEyeTracking();
-            }, 500);
+                // Set initial nav indicator position
+                 const initialNavItem = document.querySelector('.nav-item.nav-index'); // Start at Index
+                 if(initialNavItem) {
+                    moveNavIndicator(initialNavItem);
+                 }
+
+            }, 500); // Wait for mood selector fade out
         }
     });
-    
-    // Add work thumbnail click handler with enhanced transitions
+
+    // Add work thumbnail click handler
     const workThumbnail = document.querySelector('.work-thumbnail');
     const workView = document.getElementById('work-view');
-    
-    if (workThumbnail) {
+
+    if (workThumbnail && workView) {
         workThumbnail.addEventListener('click', function() {
-            workView.style.transform = 'translate3d(0, 0, 0)';
+            workView.classList.add('show'); // Use class to trigger transition
+            closeAllPanels(); // Close panels when opening work view
         });
     }
-    
-    // Navigation circle handlers with improved indicator
+
+    // Navigation circle handlers
     const navItems = document.querySelectorAll('.nav-item');
     const aboutPanel = document.querySelector('.about-panel');
     const contactPanel = document.querySelector('.contact-panel');
-    const navIndicator = document.querySelector('.nav-indicator');
-    
+    const panels = [aboutPanel, contactPanel]; // Array of panels
+
+     // Function to move the indicator
+    function moveNavIndicator(targetItem) {
+        const navIndicator = document.querySelector('.nav-indicator');
+        if (!navIndicator || !navCircle) return;
+
+        const angle = parseFloat(targetItem.getAttribute('data-angle')) || 0;
+        const radius = navCircle.offsetWidth / 2 - navIndicator.offsetWidth / 2 - 10; // Adjust radius (e.g., subtract padding/border)
+
+        // Rotate the indicator around the circle's center and move it outwards
+        navIndicator.style.transform = `translate(-50%, -50%) rotate(${angle}deg) translateY(${-radius}px)`;
+    }
+
     navItems.forEach((item) => {
         item.addEventListener('mouseenter', function() {
-            // Move indicator to hovered nav item with smoother animation
-            const itemRect = this.getBoundingClientRect();
-            const circleRect = navCircle.getBoundingClientRect();
-            
-            const circleCenterX = circleRect.left + circleRect.width / 2;
-            const circleCenterY = circleRect.top + circleRect.height / 2;
-            
-            const itemCenterX = itemRect.left + itemRect.width / 2;
-            const itemCenterY = itemRect.top + itemRect.height / 2;
-            
-            // Position indicator with 3D transform
-            navIndicator.style.left = `${itemCenterX - circleCenterX + circleRect.width / 2}px`;
-            navIndicator.style.top = `${itemCenterY - circleCenterY + circleRect.height / 2}px`;
-            
-            // Add subtle scale effect
-            navIndicator.style.transform = 'translate3d(-50%, -50%, 0) scale3d(1.2, 1.2, 1)';
-            setTimeout(() => {
-                navIndicator.style.transform = 'translate3d(-50%, -50%, 0) scale3d(1, 1, 1)';
-            }, 150);
+             moveNavIndicator(this);
         });
-        
+
+        // Optional: Reset indicator when mouse leaves the circle
+        // navCircle.addEventListener('mouseleave', () => {
+        //     const currentItem = document.querySelector('.nav-item.active-nav') || document.querySelector('.nav-item.nav-index');
+        //     if(currentItem) moveNavIndicator(currentItem);
+        // });
+
         item.addEventListener('click', function() {
-            // Handle navigation item clicks with enhanced transitions
+            // Optional: Mark active nav item visually if needed
+            // navItems.forEach(i => i.classList.remove('active-nav'));
+            // this.classList.add('active-nav');
+
+            // Handle navigation item clicks
             if (this.classList.contains('nav-about')) {
-                aboutPanel.style.transform = 'translate3d(0, 20px, 0) scale3d(0.95, 0.95, 1)';
-                aboutPanel.classList.add('panel-active');
-                contactPanel.classList.remove('panel-active');
-                setTimeout(() => {
-                    aboutPanel.style.transform = 'translate3d(0, 0, 0) scale3d(1, 1, 1)';
-                }, 50);
+                togglePanel(aboutPanel, contactPanel);
             } else if (this.classList.contains('nav-contact')) {
-                contactPanel.style.transform = 'translate3d(0, 20px, 0) scale3d(0.95, 0.95, 1)';
-                contactPanel.classList.add('panel-active');
-                aboutPanel.classList.remove('panel-active');
-                setTimeout(() => {
-                    contactPanel.style.transform = 'translate3d(0, 0, 0) scale3d(1, 1, 1)';
-                }, 50);
+                togglePanel(contactPanel, aboutPanel);
             } else if (this.classList.contains('nav-work')) {
-                workView.style.transform = 'translate3d(0, 0, 0)';
-                aboutPanel.classList.remove('panel-active');
-                contactPanel.classList.remove('panel-active');
+                if (workView) workView.classList.add('show');
+                closeAllPanels();
             } else if (this.classList.contains('nav-index')) {
-                // Return to main view with transition
-                workView.style.transform = 'translate3d(100%, 0, 0)';
-                aboutPanel.classList.remove('panel-active');
-                contactPanel.classList.remove('panel-active');
+                if (workView) workView.classList.remove('show');
+                closeAllPanels();
             }
+             // Move indicator to clicked item
+             moveNavIndicator(this);
         });
     });
-    
-    // Close panel buttons with scale effect
+
+    function togglePanel(panelToShow, panelToHide) {
+        if (panelToShow.classList.contains('panel-active')) {
+            panelToShow.classList.remove('panel-active'); // Close if already open
+        } else {
+            if (panelToHide) panelToHide.classList.remove('panel-active'); // Close the other panel
+            panelToShow.classList.add('panel-active'); // Open the target panel
+        }
+    }
+
+    function closeAllPanels() {
+         panels.forEach(panel => panel.classList.remove('panel-active'));
+    }
+
+
+    // Close panel buttons
     const closePanelBtns = document.querySelectorAll('.close-panel');
     closePanelBtns.forEach((btn) => {
         btn.addEventListener('click', function() {
-            const panel = this.parentElement;
-            panel.style.transform = 'translate3d(0, 20px, 0) scale3d(0.95, 0.95, 1)';
-            setTimeout(() => {
-                panel.classList.remove('panel-active');
-                setTimeout(() => {
-                    panel.style.transform = '';
-                }, 300);
-            }, 200);
+            this.parentElement.classList.remove('panel-active');
         });
     });
-    
-    // Close work view with transition
+
+    // Close work view
     const workClose = document.querySelector('.work-close');
-    if (workClose) {
+    if (workClose && workView) {
         workClose.addEventListener('click', function() {
-            workView.style.transform = 'translate3d(100%, 0, 0)';
+            workView.classList.remove('show'); // Use class for transition
         });
     }
-    
+
     // Theme dots in sidebar
     const sidebarDots = document.querySelectorAll('.sidebar-dots .dot');
     sidebarDots.forEach((dot) => {
         dot.addEventListener('click', function() {
             const theme = this.getAttribute('data-theme');
-            document.body.className = `${theme}-theme`;
+            document.body.className = `${theme}-theme`; // Apply theme class
             updateSidebarDots(theme);
-            
+
             // Add scale animation for dot click
-            this.style.transform = 'scale3d(1.3, 1.3, 1)';
+            this.style.transform = 'scale(1.3)';
             setTimeout(() => {
-                this.style.transform = 'scale3d(1, 1, 1)';
-            }, 200);
+                this.style.transform = 'scale(1)';
+            }, 150);
         });
     });
-});
 
-// Functions
+    // Initial sidebar dot state based on default theme
+    updateSidebarDots(document.body.classList[0]?.split('-')[0] || 'dark');
+
+}); // End DOMContentLoaded
+
+// --- FUNCTIONS ---
+
 function setupEyeTracking() {
-    if (!pupil || !eyeContainer) {
-        pupil = document.querySelector('.pupil');
-        eyeContainer = document.querySelector('.eye-container');
+    // Ensure elements exist
+    if (!innerPupil || !eyeOutline || !eyeContainer) {
+        console.error("Eye elements not found for tracking.");
+        return;
     }
-    
-    if (pupil && eyeContainer) {
-        let targetX = 0;
-        let targetY = 0;
-        let currentX = 0;
-        let currentY = 0;
-        const easing = 0.1;
-        let rafId = null;
-        let isTracking = false;
-        
-        function updatePupilPosition() {
-            if (!isTracking) return;
-            
-            const eyeRect = eyeContainer.getBoundingClientRect();
+
+    let targetX = 0;
+    let targetY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    const easing = 0.08; // Slightly slower easing
+    let rafId = null;
+    let isTracking = false;
+    let lastMouseX = window.innerWidth / 2; // Start center
+    let lastMouseY = window.innerHeight / 2;
+
+    function updatePupilPosition() {
+        if (!isTracking && (Math.abs(currentX - targetX) < 0.1 && Math.abs(currentY - targetY) < 0.1)) {
+             // Stop RAF if not tracking and close to target (center)
+            if(rafId) cancelAnimationFrame(rafId);
+            rafId = null;
+            return; // Exit if not tracking and centered
+        }
+
+        // Calculate movement constraints based on the eye-outline size
+        const outlineRect = eyeOutline.getBoundingClientRect();
+        const maxMoveX = outlineRect.width * 0.3; // Allow moving 30% of the outline width
+        const maxMoveY = outlineRect.height * 0.3; // Allow moving 30% of the outline height
+
+        // If not tracking, target is the center (0, 0)
+        if (!isTracking) {
+            targetX = 0;
+            targetY = 0;
+        } else {
+            const eyeRect = eyeOutline.getBoundingClientRect(); // Use outline bounds
             const eyeCenterX = eyeRect.left + eyeRect.width / 2;
             const eyeCenterY = eyeRect.top + eyeRect.height / 2;
-            
-            const angle = Math.atan2(lastMouseY - eyeCenterY, lastMouseX - eyeCenterX);
-            const distance = Math.min(
-                Math.hypot(lastMouseX - eyeCenterX, lastMouseY - eyeCenterY) / 10,
-                40
-            );
-            
-            targetX = Math.cos(angle) * distance;
-            targetY = Math.sin(angle) * distance;
-            
-            currentX += (targetX - currentX) * easing;
-            currentY += (targetY - currentY) * easing;
-            
-            pupil.style.transform = `translate(${currentX}px, ${currentY}px)`;
-            
-            rafId = requestAnimationFrame(updatePupilPosition);
+
+            // Calculate vector from eye center to mouse
+            const deltaX = lastMouseX - eyeCenterX;
+            const deltaY = lastMouseY - eyeCenterY;
+
+            // Reduce the influence distance - makes movement less extreme
+            const influenceFactor = 0.1;
+            targetX = deltaX * influenceFactor;
+            targetY = deltaY * influenceFactor;
+
+             // Clamp movement within the calculated bounds
+             targetX = Math.max(-maxMoveX, Math.min(maxMoveX, targetX));
+             targetY = Math.max(-maxMoveY, Math.min(maxMoveY, targetY));
         }
-        
-        let lastMouseX = 0;
-        let lastMouseY = 0;
-        
-        document.addEventListener('mousemove', (e) => {
-            if (isMobile) return;
-            
-            lastMouseX = e.clientX;
-            lastMouseY = e.clientY;
-            
-            if (!isTracking) {
-                isTracking = true;
-                updatePupilPosition();
-            }
-        });
-        
-        document.addEventListener('mouseleave', () => {
-            isTracking = false;
-            if (rafId) {
-                cancelAnimationFrame(rafId);
-                rafId = null;
-            }
-        });
+
+
+        // Apply easing
+        currentX += (targetX - currentX) * easing;
+        currentY += (targetY - currentY) * easing;
+
+        // Apply transform relative to the center of the pupil's parent (eye-outline)
+        innerPupil.style.transform = `translate(-50%, -50%) translate(${currentX}px, ${currentY}px)`;
+
+        rafId = requestAnimationFrame(updatePupilPosition);
     }
+
+
+    document.addEventListener('mousemove', (e) => {
+        if (isMobile) return;
+        lastMouseX = e.clientX;
+        lastMouseY = e.clientY;
+        if (!isTracking) {
+            isTracking = true;
+            if(!rafId) updatePupilPosition(); // Start RAF if not already running
+        }
+    }, { passive: true }); // Use passive listener
+
+    document.addEventListener('mouseleave', () => {
+        if (isMobile) return;
+        isTracking = false; // Target becomes center (0,0), animation continues via RAF until centered
+        // Don't cancel RAF here, let it return pupil to center smoothly
+    });
+
+     // Start animation loop initially to center the pupil if mouse never enters
+     if (!rafId) updatePupilPosition();
 }
 
-function handleOrientation(event) {
-    if (!isMobile || !pupil) return;
-    
-    const maxTilt = 15;
-    const beta = Math.min(Math.max(event.beta, -maxTilt), maxTilt);
-    const gamma = Math.min(Math.max(event.gamma, -maxTilt), maxTilt);
-    
-    const moveX = (gamma / maxTilt) * 20;
-    const moveY = (beta / maxTilt) * 20;
-    
-    pupil.style.transform = `translate3d(${moveX}px, ${moveY}px, 0)`;
-}
 
 function updateSidebarDots(theme) {
     const dots = document.querySelectorAll('.sidebar-dots .dot');
@@ -296,37 +326,71 @@ function updateSidebarDots(theme) {
 
 // Handle window resize for responsive behavior
 window.addEventListener('resize', function() {
+    const wasMobile = isMobile;
     isMobile = window.innerWidth < 768;
-    
-    // Reposition elements with enhanced calculations
-    if (navCircle && navCircle.classList.contains('show')) {
-        // Reset indicator position with smoother animation
-        const navIndex = document.querySelector('.nav-index');
-        if (navIndex) {
-            navIndex.dispatchEvent(new Event('mouseenter'));
-        }
+
+     // Re-initialize nav indicator position if needed
+    const currentNavItem = document.querySelector('.nav-item.active-nav') || document.querySelector('.nav-item.nav-index');
+    if (navCircle && navCircle.classList.contains('show') && currentNavItem) {
+       setTimeout(() => { // Delay slightly to allow layout reflow
+           moveNavIndicator(currentNavItem);
+       }, 50);
     }
-    
-    // Recalculate eye position for tracking
-    if (pupil && document.querySelector('.eye')) {
+
+    // Re-run eye tracking setup if needed (e.g., bounds changed)
+    if (innerPupil && !isMobile) {
         setupEyeTracking();
+    } else if (wasMobile && !isMobile) { // If resizing from mobile to desktop
+         setupEyeTracking();
+    } else if (isMobile && innerPupil) { // Reset pupil on mobile
+         innerPupil.style.transform = `translate(-50%, -50%) translate(0px, 0px)`;
     }
+
 });
 
-// Add preloader animation effect
+// Add preloader animation effect (dots)
 function animateLoader() {
-    const loaderText = document.getElementById('loader-text');
-    if (!loaderText) return;
-    
-    const originalText = loaderText.textContent;
+    const loaderTextElement = document.getElementById('loader-text');
+    if (!loaderTextElement) return;
+
+    const originalTextContent = loaderTextElement.textContent.replace(/\.\.\.$/, ''); // Remove existing dots
     let dotCount = 0;
-    
-    setInterval(() => {
+    const intervalId = setInterval(() => {
+        // Check if loader is still visible
+        if (loader.style.display === 'none' || loader.classList.contains('hide')) {
+            clearInterval(intervalId);
+            return;
+        }
         dotCount = (dotCount + 1) % 4;
         const dots = '.'.repeat(dotCount);
-        loaderText.textContent = originalText.replace('...', dots);
-    }, 500);
+        loaderTextElement.textContent = originalTextContent + dots;
+    }, 400); // Slower dot animation
 }
 
 // Initialize loader animation
 animateLoader();
+
+// Add basic device orientation handling for mobile eye (optional, can be intensive)
+// function handleOrientation(event) {
+//     if (!isMobile || !innerPupil || !eyeOutline) return;
+
+//     const maxTilt = 25; // Max tilt degrees
+//     const outlineRect = eyeOutline.getBoundingClientRect();
+//     const maxMoveX = outlineRect.width * 0.2; // Limit movement range
+//     const maxMoveY = outlineRect.height * 0.2;
+
+//     // Beta: front-back tilt, Gamma: left-right tilt
+//     // Clamp values to maxTilt
+//     let tiltX = Math.min(Math.max(event.gamma, -maxTilt), maxTilt);
+//     let tiltY = Math.min(Math.max(event.beta, -maxTilt), maxTilt);
+
+//     // Normalize tilt values (-1 to 1) and scale by maxMove
+//     const moveX = (tiltX / maxTilt) * maxMoveX;
+//     const moveY = (tiltY / maxTilt) * maxMoveY;
+
+//     innerPupil.style.transform = `translate(-50%, -50%) translate(${moveX}px, ${moveY}px)`;
+// }
+
+// if (window.DeviceOrientationEvent) {
+//   window.addEventListener('deviceorientation', handleOrientation);
+// }

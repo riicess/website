@@ -6,34 +6,48 @@
     <title>Portfolio</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-<body class="dark-theme">
+<body class="dark-theme"> <!-- Default theme -->
     <!-- Loader -->
     <div id="loader">
         <div class="loading-arc"></div>
         <div id="loader-text">SETTING UP PORTFOLIO[v2]...</div>
     </div>
-    
+
     <!-- Mood Selector -->
     <div id="mood-selector">
         <div class="mood-circle">
+            <!-- The rotating arrow indicator -->
             <div class="mood-indicator"></div>
+            <!-- Tick marks -->
+            <div class="tick-mark tick-1"></div>
+            <div class="tick-mark tick-2"></div>
+            <div class="tick-mark tick-3"></div>
+            <div class="tick-mark tick-4"></div>
+            <div class="tick-mark tick-5"></div>
+            <div class="tick-mark tick-6"></div>
+            <!-- Center plus is removed as per image -->
+            <!-- <div class="center-plus">+</div> -->
             <div class="mood-options">
+                 <!-- data-angle is now used for JS calculation -->
                 <div class="mood-option dark-option active-option" data-angle="0">
-                    <span class="mood-label">DARK</span>
+                    <span class="mood-dot"></span><span class="mood-label">DARK</span>
                 </div>
-                <div class="mood-option light-option" data-angle="90">
-                    <span class="mood-label">LIGHT</span>
+                <div class="mood-option light-option" data-angle="-90">
+                     <span class="mood-dot"></span><span class="mood-label">LIGHT</span>
                 </div>
-                <div class="mood-option stark-option" data-angle="-90">
-                    <span class="mood-label">STARK</span>
+                <div class="mood-option spring-option" data-angle="90">
+                     <span class="mood-dot"></span><span class="mood-label">SPRING</span>
                 </div>
-                <div class="center-plus">+</div>
+                <!-- Removed Stark option -->
+                <!-- Center crosshair -->
+                <div class="center-crosshair-h"></div>
+                <div class="center-crosshair-v"></div>
             </div>
         </div>
         <p>SET THE MOOD THAT MATCHES YOUR VIBE</p>
         <button id="set-mood-btn">SET MOOD <span class="btn-plus">+</span></button>
     </div>
-    
+
     <!-- Main Website -->
     <div class="header">
         <div class="logo">B</div>
@@ -46,13 +60,14 @@
             </div>
         </div>
     </div>
-    
+
     <div class="main-content">
         <div class="sidebar">
             <div class="sidebar-dots">
+                 <!-- Ensure data-theme matches the mood options -->
                 <div class="dot dot-filled" data-theme="dark"></div>
                 <div class="dot dot-outline" data-theme="light"></div>
-                <div class="dot dot-outline" data-theme="stark"></div>
+                <div class="dot dot-outline" data-theme="spring"></div> <!-- Add dot for spring if needed -->
             </div>
             <div class="tagline">
                 CREATING DIGITAL<br>
@@ -60,32 +75,42 @@
                 FOR DESIGN AND MOTION
             </div>
             <div class="section-title">RECENT WORK</div>
-            
+
             <div class="work-thumbnail">
                 <img src="/api/placeholder/280/200" alt="Project 1" class="work-image">
                 <div class="work-label">STRFIRE</div>
             </div>
         </div>
-        
+
         <div class="main-area">
             <div class="eye-container">
                 <div class="eye">
-                    <div class="eye-wireframe"></div>
-                    <div class="pupil"></div>
+                    <div class="eye-wireframe">
+                         <!-- Rings for sphere effect -->
+                        <div class="wireframe-ring ring-1"></div>
+                        <div class="wireframe-ring ring-2"></div>
+                        <div class="wireframe-ring ring-3"></div>
+                    </div>
+                    <!-- Eye shape outline -->
+                    <div class="eye-outline">
+                        <!-- The part that follows the cursor -->
+                        <div class="inner-pupil"></div>
+                    </div>
                 </div>
                 <div class="orbit"></div>
             </div>
         </div>
     </div>
-    
+
     <div class="nav-circle">
+        <!-- Indicator dot moves along the edge -->
         <div class="nav-indicator"></div>
-        <div class="nav-item nav-index">INDEX</div>
-        <div class="nav-item nav-work">WORK</div>
-        <div class="nav-item nav-about">ABOUT</div>
-        <div class="nav-item nav-contact">CONTACT</div>
+        <div class="nav-item nav-index" data-angle="-90">INDEX</div>
+        <div class="nav-item nav-work" data-angle="180">WORK</div>
+        <div class="nav-item nav-about" data-angle="0">ABOUT</div>
+        <div class="nav-item nav-contact" data-angle="90">CONTACT</div>
     </div>
-    
+
     <!-- About Panel -->
     <div class="about-panel">
         <div class="close-panel">X</div>
@@ -108,26 +133,26 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Contact Panel -->
     <div class="contact-panel">
         <div class="close-panel">X</div>
         <div class="contact-content">
             <h2>CONTACT</h2>
             <a href="mailto:hello@dylanbrouwer.design" class="contact-email">HELLO@DYLANBROUWER.DESIGN</a>
-            
+
             <div class="social-links">
                 <a href="#" class="social-link">LINKEDIN</a>
                 <a href="#" class="social-link">INSTAGRAM</a>
             </div>
-            
+
             <a href="#" class="awards-link">
                 <span>AWARDS</span>
                 <span>W.</span>
             </a>
         </div>
     </div>
-    
+
     <!-- Work View - Slides from right -->
     <div id="work-view">
         <div class="header">
@@ -141,7 +166,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="work-details">
             <div class="work-detail">
                 <img src="/api/placeholder/600/350" alt="Project 1" class="work-image">
@@ -160,8 +185,8 @@
         </div>
         <div class="work-close">X</div>
     </div>
-    
+
     <!-- JavaScript -->
     <script src="app.js"></script>
 </body>
-</html> 
+</html>
