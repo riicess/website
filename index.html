@@ -80,31 +80,29 @@
         </div>
 
         <div class="main-area">
-             <!-- NEW 3D Sphere and Eye Structure -->
-            <div class="eye-container"> <!-- Boundary for mouse interaction -->
-                <div class="eye-sphere"> <!-- The 3D rotating element -->
-                    <!-- Wireframe Lines -->
-                    <div class="sphere-line latitude" style="transform: rotateX(0deg);"></div> <!-- Explicitly add 0deg -->
-                    <div class="sphere-line latitude" style="transform: rotateX(30deg);"></div>
-                    <div class="sphere-line latitude" style="transform: rotateX(60deg);"></div>
-                    <div class="sphere-line latitude" style="transform: rotateX(90deg);"></div>
-                    <div class="sphere-line latitude" style="transform: rotateX(120deg);"></div>
-                    <div class="sphere-line latitude" style="transform: rotateX(150deg);"></div>
+             <!-- New Globe Structure -->
+            <div class="globe-container">
+                <div class="globe">
+                    <!-- Globe lines -->
+                    <div class="globe-line lat"></div>
+                    <div class="globe-line lat" style="transform: rotateX(30deg) rotateY(0deg);"></div>
+                    <div class="globe-line lat" style="transform: rotateX(60deg) rotateY(0deg);"></div>
+                    <div class="globe-line lat" style="transform: rotateX(90deg) rotateY(0deg);"></div>
+                    <div class="globe-line lat" style="transform: rotateX(120deg) rotateY(0deg);"></div>
+                    <div class="globe-line lat" style="transform: rotateX(150deg) rotateY(0deg);"></div>
 
-                    <div class="sphere-line longitude" style="transform: rotateY(0deg);"></div> <!-- Explicitly add 0deg -->
-                    <div class="sphere-line longitude" style="transform: rotateY(30deg);"></div>
-                    <div class="sphere-line longitude" style="transform: rotateY(60deg);"></div>
-                    <div class="sphere-line longitude" style="transform: rotateY(90deg);"></div>
-                    <div class="sphere-line longitude" style="transform: rotateY(120deg);"></div>
-                    <div class="sphere-line longitude" style="transform: rotateY(150deg);"></div>
+                    <div class="globe-line long"></div>
+                    <div class="globe-line long" style="transform: rotateY(30deg) rotateX(0deg);"></div>
+                    <div class="globe-line long" style="transform: rotateY(60deg) rotateX(0deg);"></div>
+                    <div class="globe-line long" style="transform: rotateY(90deg) rotateX(0deg);"></div>
+                    <div class="globe-line long" style="transform: rotateY(120deg) rotateX(0deg);"></div>
+                    <div class="globe-line long" style="transform: rotateY(150deg) rotateX(0deg);"></div>
 
-                    <!-- The Eye -->
-                    <div class="eye">
-                        <div class="pupil"></div>
-                    </div>
+                    <!-- Central Element -->
+                    <div class="globe-center"></div>
                 </div>
             </div>
-             <!-- End NEW 3D Sphere Structure -->
+             <!-- End New Globe Structure -->
         </div>
     </div>
     <!-- End content-wrapper -->

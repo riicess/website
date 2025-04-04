@@ -1,22 +1,17 @@
 /* --- START OF FILE styles.css --- */
 
 :root {
-    /* Theme variables remain the same */
     --primary-color: #a39aed; /* Lilac for dark theme */
     --text-color: #ffffff;
     --bg-color: #111111;
     --secondary-bg: #1a1a1a;
     --mood-active-color: #ff6347; /* Orange/Red for mood selector active dot */
     --nav-indicator-color: #ffffff; /* White for nav dot */
-    /* --- NEW/UPDATED --- */
-    --eye-wireframe-color: #a39aed; /* Lilac for sphere lines */
+    --eye-wireframe-color: #a39aed; /* Lilac for eye wireframe */
     --eye-pupil-color: #a39aed; /* Lilac for eye pupil */
-    --eye-shape-bg: #050505; /* Black for the eye shape background */
-    --sphere-size: 300px; /* Control sphere size */
-    --eye-size-factor: 0.6; /* Eye size relative to sphere */
+    --eye-orbit-color: #a39aed; /* Lilac for eye orbit */
+    --eye-shape-bg: #050505; /* Black for the eye shape */
 }
-
-/* --- Other styles remain the same (Loader, Mood, Header, Sidebar, Nav, Panels etc.) --- */
 
 * {
     margin: 0;
@@ -179,20 +174,15 @@ body {
 .mood-indicator {
     position: absolute;
     width: 0; height: 0;
-    /* Position exactly at the center initially */
-    top: 50%;
+    top: calc(50% - 10px);
     left: 50%;
-    /* Remove transform-origin, JS will handle the full transform */
-    /* transform-origin: center 10px; */
+    transform-origin: center 10px;
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-bottom: 10px solid rgba(255, 255, 255, 0.7); /* Arrow shape */
+    border-bottom: 10px solid rgba(255, 255, 255, 0.7);
     z-index: 1;
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    /* Remove the static CSS transform, JS will set it */
-    /* transform: translateX(-50%) rotate(0deg); */
-    /* Ensure centered before JS moves it */
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%) rotate(0deg);
 }
 
 .tick-mark {
@@ -254,10 +244,8 @@ body {
     align-items: center;
     width: 100%;
     z-index: 700;
-    opacity: 0; /* Start hidden if loaded after mood */
-    visibility: hidden; /* Start hidden if loaded after mood */
 }
-.header.show { opacity: 1; visibility: visible; transition: opacity 0.5s ease; } /* Fade in */
+.header.show { opacity: 1; visibility: visible; }
 
 .logo {
     font-size: 28px;
@@ -371,101 +359,81 @@ body {
 }
 
 
-/* --- NEW EYE AREA --- */
+/* --- EYE AREA --- */
 .main-area {
     flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-top: 30px; /* Align with sidebar content */
+    padding-top: 30px;
     position: relative;
-    min-height: calc(var(--sphere-size) + 60px); /* Ensure space */
-    perspective: 1000px; /* <<< CONFIRMED: Needed for 3D */
-    /* background-color: rgba(255, 0, 0, 0.1); */ /* Optional: Debug background */
+    min-height: 400px;
 }
 
 .eye-container {
-    /* This container now just defines the interaction area and perspective origin */
-    width: var(--sphere-size);
-    height: var(--sphere-size);
+    width: 400px;
+    height: 400px;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative; /* Needed for absolute positioning inside */
-    /* border: 1px dashed cyan; */ /* Optional: Debug border */
-     cursor: crosshair; /* Indicate interaction area */
-}
-
-.eye-sphere {
-    width: 100%; /* Takes size from eye-container */
-    height: 100%;
     position: relative;
-    transform-style: preserve-3d; /* <<< CONFIRMED: Enable 3D space for children */
-    /* animation: rotateSphere 40s linear infinite; */ /* <--- COMMENTED OUT THIS LINE */
-    /* border: 1px dashed lime; */ /* Optional: Debug border */
 }
 
-/* Keep the @keyframes rule, it doesn't hurt to leave it */
-@keyframes rotateSphere {
-    from { transform: rotateX(0deg) rotateY(0deg); }
-    to   { transform: rotateX(360deg) rotateY(360deg); }
+/* Wireframe Sphere (Behind Eye) */
+.eye-wireframe {
+    /* Ensure z-index is low */
+    z-index: 1;
+    /* Ensure color is visible */
+    /* border-color: var(--eye-wireframe-color); */ /* Check variable */
+    /* Rest of styles... */
+    position: absolute; width: 60%; height: 60%; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; transform-style: preserve-3d;
+}
+.wireframe-ring {
+    /* Ensure border is visible */
+     border: 1px solid var(--eye-wireframe-color); /* Check variable */
+     /* Rest of styles... */
+     position: absolute; width: 100%; height: 100%; border-radius: 50%; top: 0; left: 0; opacity: 0.6; box-sizing: border-box;
+}
+.ring-1 { transform: rotateX(75deg) rotateY(15deg); }
+.ring-2 { transform: rotateX(75deg) rotateY(75deg); }
+.ring-3 { transform: rotateX(75deg) rotateY(135deg); }
+
+/* Orbiting Ellipse (Behind Eye) */
+.orbit {
+    /* Ensure z-index is between wireframe and eye */
+   z-index: 2;
+   /* Ensure border/shadow are visible */
+    border: 1px solid var(--eye-orbit-color); /* Check variable */
+    box-shadow: 0 0 20px 5px var(--eye-orbit-color); /* Check variable */
+    /* Rest of styles... */
+    position: absolute; width: 90%; height: 90%; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%) rotateX(70deg) rotateZ(-20deg); opacity: 0.5; pointer-events: none;
 }
 
-/* Style for the wireframe lines */
-.sphere-line {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    border-radius: 50%;
-    /* --- Use theme variable and control visibility --- */
-    border: 1px solid var(--eye-wireframe-color); /* Use variable */
-    opacity: 0.6; /* <<< ADJUST VISIBILITY HERE (e.g., 0.3 for subtle, 0.6 for clear) */
-    /* --- END VISIBILITY CONTROL --- */
-    box-sizing: border-box; /* Include border in size */
-    /* Base transform is handled inline or via specific classes */
-    transform-origin: center center;
-    pointer-events: none; /* Lines shouldn't block interaction */
-    backface-visibility: visible; /* <<< ADD THIS LINE TO SEE THE BACK */
-}
-/* Specific transforms are set inline in HTML */
-
-/* Eye Style (positioned within the 3D sphere) */
+/* NEW Eye Shape Style */
 .eye {
+    /* Ensure z-index is highest */
+    z-index: 10;
+    /* Ensure background is distinct */
+    background-color: var(--eye-shape-bg); /* Check variable */
+    /* Ensure size is non-zero */
+    position: relative; width: 65%; height: 35%; border-radius: 50% / 60% 60% 40% 40%; display: flex; justify-content: center; align-items: center; overflow: hidden;
+}
+
+/* NEW Pupil Style */
+.pupil {
+    /* Ensure it's visible */
     position: absolute;
     top: 50%; left: 50%;
-    /* Calculate size based on sphere size */
-    width: calc(var(--sphere-size) * var(--eye-size-factor));
-    height: calc(var(--sphere-size) * var(--eye-size-factor) * 0.55); /* Adjust height ratio for eye shape */
-    /* Center and slightly forward within 3D space */
-    transform: translate3d(-50%, -50%, calc(var(--sphere-size) * 0.05)); /* Use calc for Z */
-    border-radius: 50% / 60% 60% 40% 40%; /* Keep the unique eye shape */
-    background-color: var(--eye-shape-bg);
-    display: flex; /* To center pupil */
-    justify-content: center;
-    align-items: center;
-    overflow: hidden; /* Hide pupil parts outside */
-    z-index: 5; /* Ensure eye is above lines visually */
-    pointer-events: none; /* Eye itself shouldn't block container interaction */
-}
-
-/* Pupil Style (inside the .eye) */
-.pupil {
-    position: absolute; /* Position relative to .eye */
-    top: 50%; left: 50%;
-    /* Size relative to the eye */
-    width: 25%;
-    padding-bottom: 25%; /* Maintain aspect ratio */
-    height: 0;
-    background-color: var(--eye-pupil-color);
-    border-radius: 50%;
-    /* Start centered - JS controls movement */
+    /* Start centered */
     transform: translate(-50%, -50%);
-    will-change: transform; /* Optimize for animation */
-    z-index: 6; /* Above eye background */
-    /* Transition is handled by JS via RAF */
-    /* pointer-events: none; */ /* Pupil doesn't need events */
+    /* Ensure size is non-zero */
+    width: 25%; padding-bottom: 25%; height: 0;
+    /* Ensure color is distinct */
+    background-color: var(--eye-pupil-color); /* Check variable */
+    border-radius: 50%;
+    /* NO transition here */
+    will-change: transform;
 }
-
 
 /* --- NAVIGATION CIRCLE --- */
 .nav-circle {
@@ -553,7 +521,7 @@ body {
     border-radius: 50%;
     display: flex; justify-content: center; align-items: center;
     cursor: pointer;
-    z-index: 760; /* Above panel content */
+    z-index: 760;
     background-color: rgba(0,0,0,0.1);
     font-size: 10px;
     transition: transform 0.2s ease, background-color 0.2s ease;
@@ -564,7 +532,7 @@ body {
     margin-top: 0;
     max-height: 60vh;
     overflow-y: auto;
-    padding-right: 5px; /* Space for scrollbar */
+    padding-right: 5px;
 }
 
 /* Custom scrollbar for panels */
@@ -653,7 +621,7 @@ body {
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     cursor: pointer;
-    z-index: 820; /* Above work view header */
+    z-index: 820;
     background-color: rgba(0,0,0,0.1);
     font-size: 12px;
     transition: transform 0.2s ease, background-color 0.2s ease;
@@ -691,14 +659,10 @@ body {
 
 
 /* --- THEMES --- */
-/* Ensure --eye-wireframe-color is set correctly in ALL themes */
 
-/* Base Dark Theme */
+/* Base Dark Theme (Defined in :root) */
 .dark-theme {
-    --primary-color: #a39aed; --text-color: #f0f0f0; --bg-color: #111111; --secondary-bg: #1a1a1a; --mood-active-color: #ff6347; --nav-indicator-color: #ffffff;
-    --eye-wireframe-color: #a39aed;
-    --eye-pupil-color: #a39aed;
-    --eye-shape-bg: #050505;
+    --primary-color: #a39aed; --text-color: #f0f0f0; --bg-color: #111111; --secondary-bg: #1a1a1a; --mood-active-color: #ff6347; --nav-indicator-color: #ffffff; --eye-wireframe-color: #a39aed; --eye-pupil-color: #a39aed; --eye-orbit-color: #a39aed; --eye-shape-bg: #050505;
 }
 /* Minor theme-specific overrides if needed */
 .dark-theme .status-dot { background-color: #4CAF50; }
@@ -706,21 +670,15 @@ body {
 .dark-theme .nav-circle { border-color: rgba(255, 255, 255, 0.3); }
 .dark-theme .nav-item { color: rgba(255, 255, 255, 0.7); }
 .dark-theme .nav-item:hover { color: var(--text-color); }
+.dark-theme .orbit { box-shadow: 0 0 20px 5px var(--eye-orbit-color); }
 .dark-theme #cursor-follower-text { background-color: var(--text-color); color: var(--bg-color); }
 .dark-theme .about-content::-webkit-scrollbar-thumb, .dark-theme .contact-content::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); }
-.dark-theme .sphere-line { border-color: var(--eye-wireframe-color); } /* Ensure theme override */
-.dark-theme .close-panel { color: var(--text-color); } /* Ensure close button text visible */
-.dark-theme .work-close { color: var(--text-color); } /* Ensure close button text visible */
 
 
 /* Light Theme */
 .light-theme {
-    --primary-color: #4a4aff; --text-color: #1a1a1a; --bg-color: #f0f0f0; --secondary-bg: #ffffff; --mood-active-color: #ff4500; --nav-indicator-color: #1a1a1a;
-    --eye-wireframe-color: #4a4aff;
-    --eye-pupil-color: #4a4aff;
-    --eye-shape-bg: #dddddd; /* Lighter eye shape */
+    --primary-color: #4a4aff; --text-color: #1a1a1a; --bg-color: #f0f0f0; --secondary-bg: #ffffff; --mood-active-color: #ff4500; --nav-indicator-color: #1a1a1a; --eye-wireframe-color: #4a4aff; --eye-pupil-color: #4a4aff; --eye-orbit-color: #4a4aff; --eye-shape-bg: #1a1a1a; /* Dark eye shape */
 }
-/* --- Light theme overrides --- */
 .light-theme .loading-arc { border-color: rgba(0, 0, 0, 0.2); }
 .light-theme .loading-arc::before { border-top-color: var(--text-color); }
 .light-theme .mood-circle { border-color: rgba(0, 0, 0, 0.3); }
@@ -743,29 +701,25 @@ body {
 .light-theme .nav-item:hover { color: var(--text-color); }
 .light-theme .about-panel, .light-theme .contact-panel { border-color: rgba(0, 0, 0, 0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
 .light-theme .about-panel::after, .light-theme .contact-panel::after { background-color: var(--secondary-bg); border-color: rgba(0, 0, 0, 0.1); }
-.light-theme .close-panel { border-color: rgba(0, 0, 0, 0.2); background-color: rgba(255,255,255,0.1); color: var(--text-color);}
+.light-theme .close-panel { border-color: rgba(0, 0, 0, 0.2); background-color: rgba(255,255,255,0.1); }
 .light-theme .close-panel:hover { background-color: rgba(0, 0, 0, 0.1); }
 .light-theme .about-text { color: rgba(0, 0, 0, 0.8); }
 .light-theme .social-link { border-color: rgba(0, 0, 0, 0.2); }
 .light-theme .social-link:hover { background-color: rgba(0, 0, 0, 0.05); }
 .light-theme .awards-link { border-color: rgba(0, 0, 0, 0.2); }
 .light-theme .awards-link:hover { background-color: rgba(0, 0, 0, 0.05); }
-.light-theme .work-close { border-color: rgba(0, 0, 0, 0.2); background-color: rgba(255,255,255,0.1); color: var(--text-color);}
+.light-theme .work-close { border-color: rgba(0, 0, 0, 0.2); background-color: rgba(255,255,255,0.1); }
 .light-theme .work-close:hover { background-color: rgba(0, 0, 0, 0.1); }
 .light-theme .work-site { color: rgba(0, 0, 0, 0.6); }
 .light-theme .about-content::-webkit-scrollbar-thumb, .light-theme .contact-content::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.3); }
+.light-theme .orbit { box-shadow: 0 0 20px 5px var(--eye-orbit-color); }
 .light-theme #cursor-follower-text { background-color: var(--text-color); color: var(--bg-color); }
-.light-theme .sphere-line { border-color: var(--eye-wireframe-color); } /* Ensure theme override */
 
 
 /* Spark Theme */
 .spark-theme {
-    --primary-color: #f97316; --text-color: #fff7ed; --bg-color: #1c1917; --secondary-bg: #292524; --mood-active-color: #f97316; --nav-indicator-color: #fff7ed;
-    --eye-wireframe-color: #fb923c; /* Use a distinct spark color */
-    --eye-pupil-color: #f97316;
-    --eye-shape-bg: #0f0d0c; /* Very dark brown/black */
+    --primary-color: #f97316; --text-color: #fff7ed; --bg-color: #1c1917; --secondary-bg: #292524; --mood-active-color: #f97316; --nav-indicator-color: #fff7ed; --eye-wireframe-color: #f97316; --eye-pupil-color: #f97316; --eye-orbit-color: #fdba74; --eye-shape-bg: #050505; /* Keep eye shape dark */
 }
-/* --- Spark theme overrides --- */
 .spark-theme .loading-arc { border-color: rgba(255, 247, 237, 0.2); }
 .spark-theme .loading-arc::before { border-top-color: var(--text-color); }
 .spark-theme .mood-circle { border-color: rgba(255, 247, 237, 0.3); }
@@ -788,37 +742,36 @@ body {
 .spark-theme .nav-item:hover { color: var(--text-color); }
 .spark-theme .about-panel, .spark-theme .contact-panel { border-color: rgba(255, 247, 237, 0.1); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
 .spark-theme .about-panel::after, .spark-theme .contact-panel::after { background-color: var(--secondary-bg); border-color: rgba(255, 247, 237, 0.1); }
-.spark-theme .close-panel { border-color: rgba(255, 247, 237, 0.2); background-color: rgba(255,255,255,0.05); color: var(--text-color);}
+.spark-theme .close-panel { border-color: rgba(255, 247, 237, 0.2); background-color: rgba(255,255,255,0.05); }
 .spark-theme .close-panel:hover { background-color: rgba(255, 247, 237, 0.1); }
 .spark-theme .about-text { color: rgba(255, 247, 237, 0.8); }
 .spark-theme .social-link { border-color: rgba(255, 247, 237, 0.2); }
 .spark-theme .social-link:hover { background-color: rgba(255, 247, 237, 0.05); }
 .spark-theme .awards-link { border-color: rgba(255, 247, 237, 0.2); }
 .spark-theme .awards-link:hover { background-color: rgba(255, 247, 237, 0.05); }
-.spark-theme .work-close { border-color: rgba(255, 247, 237, 0.2); background-color: rgba(255,255,255,0.05); color: var(--text-color);}
+.spark-theme .work-close { border-color: rgba(255, 247, 237, 0.2); background-color: rgba(255,255,255,0.05); }
 .spark-theme .work-close:hover { background-color: rgba(255, 247, 237, 0.1); }
 .spark-theme .work-site { color: rgba(255, 247, 237, 0.6); }
 .spark-theme .about-content::-webkit-scrollbar-thumb, .spark-theme .contact-content::-webkit-scrollbar-thumb { background: rgba(255, 247, 237, 0.3); }
+.spark-theme .orbit { box-shadow: 0 0 20px 5px var(--eye-orbit-color); }
 .spark-theme #cursor-follower-text { background-color: var(--text-color); color: var(--bg-color); }
-.spark-theme .sphere-line { border-color: var(--eye-wireframe-color); } /* Ensure theme override */
 
 
 /* --- RESPONSIVE --- */
 @media (max-width: 1024px) {
-    :root { --sphere-size: 250px; } /* Smaller sphere on medium screens */
     .content-wrapper { flex-direction: column; padding: 0 20px 20px 20px; }
     .sidebar { width: 100%; padding-right: 0; padding-bottom: 40px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 40px; }
     .light-theme .sidebar { border-bottom-color: rgba(0, 0, 0, 0.1); }
     .spark-theme .sidebar { border-bottom-color: rgba(255, 247, 237, 0.1); }
     .sidebar-dots { flex-direction: row; }
-    .main-area { min-height: calc(var(--sphere-size) + 40px); }
+    .main-area { min-height: 350px; }
     .sidebar, .main-area { padding-top: 30px; }
+    .eye-container { width: 300px; height: 300px; }
     .work-details { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
     #work-view .header { padding: 20px; }
 }
 
 @media (max-width: 768px) {
-    :root { --sphere-size: 200px; } /* Smaller sphere on small screens */
     .header { padding: 20px; align-items: center; }
     .header-info-block { display: none; }
     .logo { width: 35px; height: 35px; font-size: 24px; }
@@ -835,9 +788,7 @@ body {
     .tick-mark { transform-origin: center calc(200px / 2); } /* Adjust origin */
     .sidebar, .main-area { padding-top: 20px; }
     #mood-selector p { font-size: 12px; text-align: center; padding: 0 20px; }
-    .main-area { min-height: calc(var(--sphere-size) + 40px); } /* Adjust min-height */
-    .eye-sphere { animation: rotateSphere 60s linear infinite; } /* Slower animation on mobile? */
+    .eye-container { width: 250px; height: 250px; }
 }
-
 
 /* --- END OF FILE styles.css --- */
