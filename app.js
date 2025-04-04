@@ -205,60 +205,66 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Functions
 function setupEyeTracking() {
-    if (!pupil || !eyeContainer) return;
-    
-    // Calculate boundaries and limitations
-    const eyeRect = document.querySelector('.eye').getBoundingClientRect();
-    const eyeRadius = eyeRect.width / 2;
-    const maxPupilTravel = eyeRadius * 0.5;
-    
-    let lastMouseX = 0;
-    let lastMouseY = 0;
-    let rafId = null;
-    let isTracking = false;
-    
-    function updatePupilPosition() {
-        if (!isTracking) return;
-        
-        const eyeCenterX = eyeRect.left + eyeRect.width / 2;
-        const eyeCenterY = eyeRect.top + eyeRect.height / 2;
-        
-        let deltaX = lastMouseX - eyeCenterX;
-        let deltaY = lastMouseY - eyeCenterY;
-        
-        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-        
-        if (distance > 0) {
-            deltaX = (deltaX / distance) * Math.min(distance * 0.5, maxPupilTravel);
-            deltaY = (deltaY / distance) * Math.min(distance * 0.5, maxPupilTravel);
-        }
-        
-        pupil.style.transform = `translate3d(${deltaX}px, ${deltaY}px, 0)`;
-        rafId = requestAnimationFrame(updatePupilPosition);
+    if (!pupil || !eyeContainer) {
+        pupil = document.querySelector('.pupil');
+        eyeContainer = document.querySelector('.eye-container');
     }
     
-    document.addEventListener('mousemove', (e) => {
-        if (isMobile) return;
+    if (pupil && eyeContainer) {
+        let targetX = 0;
+        let targetY = 0;
+        let currentX = 0;
+        let currentY = 0;
+        const easing = 0.1;
+        let rafId = null;
+        let isTracking = false;
         
-        lastMouseX = e.clientX;
-        lastMouseY = e.clientY;
+        function updatePupilPosition() {
+            if (!isTracking) return;
+            
+            const eyeRect = eyeContainer.getBoundingClientRect();
+            const eyeCenterX = eyeRect.left + eyeRect.width / 2;
+            const eyeCenterY = eyeRect.top + eyeRect.height / 2;
+            
+            const angle = Math.atan2(lastMouseY - eyeCenterY, lastMouseX - eyeCenterX);
+            const distance = Math.min(
+                Math.hypot(lastMouseX - eyeCenterX, lastMouseY - eyeCenterY) / 10,
+                40
+            );
+            
+            targetX = Math.cos(angle) * distance;
+            targetY = Math.sin(angle) * distance;
+            
+            currentX += (targetX - currentX) * easing;
+            currentY += (targetY - currentY) * easing;
+            
+            pupil.style.transform = `translate(${currentX}px, ${currentY}px)`;
+            
+            rafId = requestAnimationFrame(updatePupilPosition);
+        }
         
-        if (!isTracking) {
-            isTracking = true;
-            updatePupilPosition();
-        }
-    });
-    
-    document.addEventListener('mouseleave', () => {
-        isTracking = false;
-        if (rafId) {
-            cancelAnimationFrame(rafId);
-            rafId = null;
-        }
-    });
-    
-    if (window.DeviceOrientationEvent) {
-        window.addEventListener('deviceorientation', handleOrientation);
+        let lastMouseX = 0;
+        let lastMouseY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            if (isMobile) return;
+            
+            lastMouseX = e.clientX;
+            lastMouseY = e.clientY;
+            
+            if (!isTracking) {
+                isTracking = true;
+                updatePupilPosition();
+            }
+        });
+        
+        document.addEventListener('mouseleave', () => {
+            isTracking = false;
+            if (rafId) {
+                cancelAnimationFrame(rafId);
+                rafId = null;
+            }
+        });
     }
 }
 
