@@ -26,6 +26,12 @@ animateLoader();
 document.addEventListener('DOMContentLoaded', function() {
     // ... (Keep existing initializations: pupil, eye, mood selector) ...
 
+    // Hide the loader once everything is ready
+    const loader = document.getElementById('loader');
+    if (loader) {
+        loader.style.display = 'none';
+    }
+
     // --- NEW: Cursor Follower Setup ---
     const cursorFollower = document.getElementById('cursor-follower-text');
     const hoverTriggers = document.querySelectorAll('.interactive-hover-trigger');
