@@ -1,14 +1,22 @@
+/* --- START OF FILE styles.css --- */
+
 :root {
+    /* Theme variables remain the same */
     --primary-color: #a39aed; /* Lilac for dark theme */
     --text-color: #ffffff;
     --bg-color: #111111;
     --secondary-bg: #1a1a1a;
     --mood-active-color: #ff6347; /* Orange/Red for mood selector active dot */
     --nav-indicator-color: #ffffff; /* White for nav dot */
-    --eye-wireframe-color: #a39aed; /* Lilac for eye wireframe */
+    /* --- NEW/UPDATED --- */
+    --eye-wireframe-color: #a39aed; /* Lilac for sphere lines */
     --eye-pupil-color: #a39aed; /* Lilac for eye pupil */
-    --eye-orbit-color: #a39aed; /* Lilac for eye orbit */
+    --eye-shape-bg: #050505; /* Black for the eye shape background */
+    --sphere-size: 300px; /* Control sphere size */
+    --eye-size-factor: 0.6; /* Eye size relative to sphere */
 }
+
+/* --- Other styles remain the same (Loader, Mood, Header, Sidebar, Nav, Panels etc.) --- */
 
 * {
     margin: 0;
@@ -23,7 +31,7 @@ body {
     overflow-x: hidden;
     min-height: 100vh;
     transition: background-color 0.5s ease, color 0.5s ease;
-    display: flex; /* Make body a flex column */
+    display: flex;
     flex-direction: column;
 }
 
@@ -61,7 +69,7 @@ body {
 .loading-arc {
     width: 80px;
     height: 80px;
-    border: 2px solid rgba(255, 255, 255, 0.2); /* Lighter border */
+    border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     position: relative;
 }
@@ -112,9 +120,9 @@ body {
 
 .mood-circle {
     position: relative;
-    width: 250px; /* Slightly larger */
+    width: 250px;
     height: 250px;
-    border: 1px solid rgba(255, 255, 255, 0.3); /* Lighter border */
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
     margin-bottom: 40px;
     display: flex;
@@ -122,27 +130,13 @@ body {
     align-items: center;
 }
 
-/* Central crosshair lines */
 .center-crosshair-h, .center-crosshair-v {
     position: absolute;
     background-color: rgba(255, 255, 255, 0.3);
     z-index: 0;
 }
-.center-crosshair-h { /* Horizontal line */
-    width: 10px;
-    height: 1px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-.center-crosshair-v { /* Vertical line */
-    width: 1px;
-    height: 10px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
+.center-crosshair-h { width: 10px; height: 1px; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.center-crosshair-v { width: 1px; height: 10px; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 
 .mood-options {
     position: absolute;
@@ -154,90 +148,55 @@ body {
 
 .mood-option {
     position: absolute;
-    display: flex; /* Use flex for dot and label alignment */
+    display: flex;
     align-items: center;
-    gap: 8px; /* Space between dot and label */
+    gap: 8px;
     cursor: pointer;
     transition: color 0.3s ease;
-    transform-origin: center center; /* Ensure correct positioning */
-    color: rgba(255, 255, 255, 0.7); /* Dimmed default color */
-    user-select: none; /* Prevent selection */
+    transform-origin: center center;
+    color: rgba(255, 255, 255, 0.7);
+    user-select: none;
 }
-
-.mood-option:hover {
-    color: var(--text-color); /* Brighter on hover */
-}
-
-.mood-option.active-option {
-    color: var(--text-color); /* Full color when active */
-    font-weight: normal; /* Remove bold */
-}
+.mood-option:hover { color: var(--text-color); }
+.mood-option.active-option { color: var(--text-color); font-weight: normal; }
 
 .mood-dot {
     width: 10px;
     height: 10px;
     border-radius: 50%;
     background-color: var(--mood-active-color);
-    opacity: 0; /* Hidden by default */
+    opacity: 0;
     transition: opacity 0.3s ease;
 }
+.mood-option.active-option .mood-dot { opacity: 1; }
 
-.mood-option.active-option .mood-dot {
-    opacity: 1; /* Visible when active */
-}
+.dark-option { top: 15px; left: 50%; transform: translateX(-50%); }
+.light-option { left: 15px; top: 50%; transform: translateY(-50%); }
+.spark-option { right: 15px; top: 50%; transform: translateY(-50%); }
 
-/* Position mood options around the circle */
-.dark-option { /* Top */
-    top: 15px; /* Adjust spacing from edge */
-    left: 50%;
-    transform: translateX(-50%);
-}
-.light-option { /* Left */
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-.spark-option { /* Right */
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-}
+.mood-label { font-size: 12px; text-transform: uppercase; white-space: nowrap; }
 
-
-.mood-label {
-    font-size: 12px; /* Smaller font */
-    text-transform: uppercase;
-    white-space: nowrap;
-}
-
-/* The rotating arrow indicator */
 .mood-indicator {
     position: absolute;
-    width: 0;
-    height: 0;
-    top: calc(50% - 10px); /* Position slightly above center */
+    width: 0; height: 0;
+    top: calc(50% - 10px);
     left: 50%;
-    transform-origin: center 10px; /* Rotate around the base of the triangle */
-    border-left: 5px solid transparent; /* Arrow shape */
+    transform-origin: center 10px;
+    border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-bottom: 10px solid rgba(255, 255, 255, 0.7); /* Arrow color */
+    border-bottom: 10px solid rgba(255, 255, 255, 0.7);
     z-index: 1;
-    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* Smoother rotation */
-    /* Initial rotation points up */
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     transform: translateX(-50%) rotate(0deg);
 }
 
-/* Tick marks */
 .tick-mark {
     position: absolute;
-    width: 1px;
-    height: 10px;
+    width: 1px; height: 10px;
     background-color: rgba(255, 255, 255, 0.3);
-    top: 0;
-    left: 50%;
-    transform-origin: center calc(250px / 2); /* Rotate around circle center */
+    top: 0; left: 50%;
+    transform-origin: center calc(250px / 2);
 }
-/* Position individual tick marks */
 .tick-1 { transform: translateX(-50%) rotate(30deg); }
 .tick-2 { transform: translateX(-50%) rotate(60deg); }
 .tick-3 { transform: translateX(-50%) rotate(120deg); }
@@ -245,17 +204,16 @@ body {
 .tick-5 { transform: translateX(-50%) rotate(-30deg); }
 .tick-6 { transform: translateX(-50%) rotate(-60deg); }
 
-
 #set-mood-btn {
-    background-color: transparent; /* Button background */
+    background-color: transparent;
     color: var(--text-color);
     border: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 8px 18px; /* Adjusted padding */
+    padding: 8px 18px;
     border-radius: 20px;
     cursor: pointer;
     display: flex;
     align-items: center;
-    font-size: 11px; /* Smaller font */
+    font-size: 11px;
     text-transform: uppercase;
     margin-top: 30px;
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
@@ -264,14 +222,13 @@ body {
 .btn-plus {
     margin-left: 8px;
     display: inline-block;
-    width: 14px;
-    height: 14px;
-    border: 1px solid var(--mood-active-color); /* Orange border */
+    width: 14px; height: 14px;
+    border: 1px solid var(--mood-active-color);
     border-radius: 50%;
     position: relative;
-    color: var(--mood-active-color); /* Orange plus */
+    color: var(--mood-active-color);
     font-size: 10px;
-    line-height: 12px; /* Center plus vertically */
+    line-height: 12px;
     text-align: center;
 }
 
@@ -280,602 +237,393 @@ body {
     color: var(--bg-color);
     border-color: var(--text-color);
 }
-
 #set-mood-btn:hover .btn-plus {
     border-color: var(--bg-color);
     color: var(--bg-color);
 }
 
-
 /* --- MAIN WEBSITE COMMON STYLES --- */
 .header {
-    padding: 30px 40px; /* Keep padding */
+    padding: 30px 40px;
     display: flex;
-    align-items: center; /* Align items vertically center */
+    align-items: center;
     width: 100%;
-    z-index: 700; /* Ensure above content */
-    /* Position in normal flow */
+    z-index: 700;
+    opacity: 0; /* Start hidden if loaded after mood */
+    visibility: hidden; /* Start hidden if loaded after mood */
 }
-
-.header.show { /* Use .show class on body or parent if needed */
-    opacity: 1;
-    visibility: visible;
-}
+.header.show { opacity: 1; visibility: visible; transition: opacity 0.5s ease; } /* Fade in */
 
 .logo {
-    font-size: 28px; /* Larger logo */
+    font-size: 28px;
     font-weight: bold;
     border: 1px solid var(--text-color);
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 40px; height: 40px;
+    display: flex; justify-content: center; align-items: center;
     border-radius: 50%;
-    flex-shrink: 0; /* Prevent logo shrinking */
+    flex-shrink: 0;
 }
-.header-info-block { /* Style the new info wrapper */
+.header-info-block {
     display: flex;
     flex-direction: column;
-    gap: 5px; /* Adjust gap */
-    margin-left: 30px; /* Space from logo */
+    gap: 5px;
+    margin-left: 30px;
     font-size: 12px;
     line-height: 1.4;
-    flex-grow: 1; /* Allow to take some space */
+    flex-grow: 1;
+}
+/* Add cursor pointer to trigger elements */
+.interactive-hover-trigger {
+    cursor: pointer;
 }
 
-.status { /* Push status to the right */
+.status {
     display: flex;
     align-items: center;
-    gap: 8px; /* Increased gap */
-    font-size: 11px; /* Smaller status font */
-    margin-left: auto; /* Pushes this element to the far right */
-    flex-shrink: 0; /* Prevent status shrinking */
-    white-space: nowrap; /* Prevent wrapping */
+    gap: 8px;
+    font-size: 11px;
+    margin-left: auto;
+    flex-shrink: 0;
+    white-space: nowrap;
 }
-
 .status-dot {
-    width: 7px;
-    height: 7px;
-    background-color: #4CAF50; /* Keep green dot */
+    width: 7px; height: 7px;
+    background-color: #4CAF50;
     border-radius: 50%;
 }
 
-
-/* Styles for the new content wrapper */
 .content-wrapper {
-    display: flex; /* Sidebar and Main Area side-by-side */
-    flex-grow: 1; /* Takes remaining vertical space */
-    padding: 0 40px 40px 40px; /* Padding below header (top padding removed) */
-    opacity: 0; /* Initially hidden */
+    display: flex;
+    flex-grow: 1;
+    padding: 0 40px 40px 40px;
+    opacity: 0;
     visibility: hidden;
-    transition: opacity 0.5s ease 0.3s; /* Delay appearance */
-    position: relative; /* For children positioning if needed */
+    transition: opacity 0.5s ease 0.3s;
+    position: relative;
 }
-
-/* Show applies to wrapper now */
-.content-wrapper.show {
-    opacity: 1;
-    visibility: visible;
-}
+.content-wrapper.show { opacity: 1; visibility: visible; }
 
 .sidebar {
-    width: 250px; /* Fixed width */
-    padding-right: 40px; /* Space between sidebar and main */
-    padding-top: 30px; /* Add padding to align below header (adjust as needed) */
+    width: 250px;
+    padding-right: 40px;
+    padding-top: 30px;
     display: flex;
     flex-direction: column;
-    flex-shrink: 0; /* Prevent shrinking */
+    flex-shrink: 0;
 }
 
 .sidebar-dots {
     display: flex;
     flex-direction: column;
-    gap: 12px; /* Increased gap */
+    gap: 12px;
     margin-bottom: 40px;
     margin-top: 20px;
-    align-items: flex-start; /* Align dots left */
+    align-items: flex-start;
 }
-
 .dot {
-    width: 8px; /* Smaller dots */
-    height: 8px;
+    width: 8px; height: 8px;
     border-radius: 50%;
     cursor: pointer;
     transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
-    border: 1px solid transparent; /* Add border for sizing consistency */
+    border: 1px solid transparent;
 }
-
-.dot-filled {
-    background-color: var(--text-color);
-    border-color: var(--text-color);
-}
-
-.dot-outline {
-    background-color: transparent;
-    border: 1px solid var(--text-color);
-}
-
-.dot:active {
-    transform: scale(0.9);
-}
+.dot-filled { background-color: var(--text-color); border-color: var(--text-color); }
+.dot-outline { background-color: transparent; border: 1px solid var(--text-color); }
+.dot:active { transform: scale(0.9); }
 
 .tagline {
     text-transform: uppercase;
     margin: 30px 0;
     line-height: 1.6;
-    font-size: 12px; /* Smaller tagline font */
+    font-size: 12px;
 }
-
 .section-title {
     text-transform: uppercase;
-    margin: 20px 0 15px 0; /* Adjust margins */
-    font-size: 11px; /* Smaller section title */
-    color: rgba(255, 255, 255, 0.6); /* Dimmer color */
+    margin: 20px 0 15px 0;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
 }
 
 .work-thumbnail {
     margin-top: 10px;
     position: relative;
-    cursor: pointer;
+    cursor: pointer; /* Retained for clickability */
     transition: transform 0.3s ease;
-    border-radius: 8px; /* Rounded corners */
-    overflow: hidden; /* Clip image */
+    border-radius: 8px;
+    overflow: hidden;
 }
-
-.work-thumbnail:hover {
-    transform: scale(1.03); /* Slightly larger scale */
-}
-
-.work-thumbnail img {
-    width: 100%;
-    display: block;
-    height: auto; /* Maintain aspect ratio */
-}
-
+.work-thumbnail:hover { transform: scale(1.03); }
+.work-thumbnail img { width: 100%; display: block; height: auto; }
 .work-label {
     position: absolute;
-    bottom: 10px;
-    left: 10px;
+    bottom: 10px; left: 10px;
     color: white;
-    font-size: 10px; /* Smaller label */
+    font-size: 10px;
     background-color: rgba(0, 0, 0, 0.6);
     padding: 3px 6px;
     border-radius: 3px;
     text-transform: uppercase;
 }
 
-/* --- EYE AREA --- */
+
+/* --- NEW EYE AREA --- */
 .main-area {
-    flex: 1; /* Take remaining horizontal space */
+    flex: 1;
     display: flex;
     justify-content: center;
-    align-items: center; /* Keep eye centered vertically */
-    padding-top: 30px; /* Add padding to align below header (adjust as needed) */
+    align-items: center;
+    padding-top: 30px; /* Align with sidebar content */
     position: relative;
-    min-height: 400px; /* Ensure space for the eye */
+    min-height: calc(var(--sphere-size) + 60px); /* Ensure space */
+    perspective: 1000px; /* <<< CONFIRMED: Needed for 3D */
+    /* background-color: rgba(255, 0, 0, 0.1); */ /* Optional: Debug background */
 }
 
 .eye-container {
-    width: 400px; /* Container size */
-    height: 400px;
+    /* This container now just defines the interaction area and perspective origin */
+    width: var(--sphere-size);
+    height: var(--sphere-size);
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative; /* Position child elements relative to this */
+    position: relative; /* Needed for absolute positioning inside */
+    /* border: 1px dashed cyan; */ /* Optional: Debug border */
+     cursor: crosshair; /* Indicate interaction area */
 }
 
-.eye {
-    width: 100%; /* Eye takes full container width */
+.eye-sphere {
+    width: 100%; /* Takes size from eye-container */
     height: 100%;
-    position: relative; /* For positioning children */
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    position: relative;
+    transform-style: preserve-3d; /* <<< CONFIRMED: Enable 3D space for children */
+    animation: rotateSphere 40s linear infinite; /* Adjust duration as needed */
+    /* border: 1px dashed lime; */ /* Optional: Debug border */
 }
 
-/* Wireframe Sphere */
-.eye-wireframe {
-    position: absolute;
-    width: 60%; /* Size relative to eye container */
-    height: 60%;
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: none; /* Allow clicks through */
-    transform-style: preserve-3d; /* For 3D rotations */
+@keyframes rotateSphere {
+    from { transform: rotateX(0deg) rotateY(0deg); }
+    to   { transform: rotateX(360deg) rotateY(360deg); }
 }
 
-.wireframe-ring {
+/* Style for the wireframe lines */
+.sphere-line {
     position: absolute;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     border-radius: 50%;
-    border: 1px solid var(--eye-wireframe-color);
-    top: 0;
-    left: 0;
-    opacity: 0.6; /* Slightly transparent */
+    /* --- Use theme variable and control visibility --- */
+    border: 1px solid var(--eye-wireframe-color); /* Use variable */
+    opacity: 0.6; /* <<< ADJUST VISIBILITY HERE (e.g., 0.3 for subtle, 0.6 for clear) */
+    /* --- END VISIBILITY CONTROL --- */
     box-sizing: border-box; /* Include border in size */
+    /* Base transform is handled inline or via specific classes */
+    transform-origin: center center;
+    pointer-events: none; /* Lines shouldn't block interaction */
 }
+/* Specific transforms are set inline in HTML */
 
-/* Apply 3D rotations for sphere effect */
-.ring-1 { transform: rotateX(75deg) rotateY(15deg); }
-.ring-2 { transform: rotateX(75deg) rotateY(75deg); }
-.ring-3 { transform: rotateX(75deg) rotateY(135deg); }
-
-
-/* Eye Shape Outline */
-.eye-outline {
-    width: 65%; /* Size relative to eye container */
-    height: 30%; /* Adjust height for eye shape */
+/* Eye Style (positioned within the 3D sphere) */
+.eye {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 50% / 60% 60% 40% 40%; /* Horizontal / Vertical radii */
-    background-color: var(--bg-color); /* Match background */
-    display: flex;
+    top: 50%; left: 50%;
+    /* Calculate size based on sphere size */
+    width: calc(var(--sphere-size) * var(--eye-size-factor));
+    height: calc(var(--sphere-size) * var(--eye-size-factor) * 0.55); /* Adjust height ratio for eye shape */
+    /* Center and slightly forward within 3D space */
+    transform: translate3d(-50%, -50%, calc(var(--sphere-size) * 0.05)); /* Use calc for Z */
+    border-radius: 50% / 60% 60% 40% 40%; /* Keep the unique eye shape */
+    background-color: var(--eye-shape-bg);
+    display: flex; /* To center pupil */
     justify-content: center;
     align-items: center;
-    z-index: 1; /* Above wireframe */
-    overflow: hidden; /* Clip the pupil */
+    overflow: hidden; /* Hide pupil parts outside */
+    z-index: 5; /* Ensure eye is above lines visually */
+    pointer-events: none; /* Eye itself shouldn't block container interaction */
 }
 
-/* Pupil that moves */
-.inner-pupil {
-    width: 35%; /* Pupil size relative to eye-outline */
-    padding-bottom: 35%; /* Maintain aspect ratio (circular) */
+/* Pupil Style (inside the .eye) */
+.pupil {
+    position: absolute; /* Position relative to .eye */
+    top: 50%; left: 50%;
+    /* Size relative to the eye */
+    width: 25%;
+    padding-bottom: 25%; /* Maintain aspect ratio */
     height: 0;
     background-color: var(--eye-pupil-color);
     border-radius: 50%;
-    position: absolute; /* Positioned within eye-outline */
-    top: 50%;
-    left: 50%;
-    transform-origin: center center;
+    /* Start centered - JS controls movement */
     transform: translate(-50%, -50%);
-    transition: transform 0.1s linear; /* Faster, linear tracking */
-    z-index: 2; /* Above outline */
+    will-change: transform; /* Optimize for animation */
+    z-index: 6; /* Above eye background */
+    /* Transition is handled by JS via RAF */
+    /* pointer-events: none; */ /* Pupil doesn't need events */
 }
 
-/* Orbiting Ellipse */
-.orbit {
-    position: absolute;
-    width: 90%; /* Size relative to eye container */
-    height: 90%; /* Start as circle */
-    border: 1px solid var(--eye-orbit-color);
-    border-radius: 50%; /* Make it circular first */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotateX(70deg) rotateZ(-20deg); /* Tilt and rotate */
-    opacity: 0.5;
-    pointer-events: none; /* Allow clicks through */
-    box-shadow: 0 0 20px 5px var(--eye-orbit-color); /* Add glow effect */
-}
 
 /* --- NAVIGATION CIRCLE --- */
 .nav-circle {
     position: fixed;
-    bottom: 40px; /* Position from bottom */
-    right: 40px;  /* Position from right */
-    width: 160px; /* Larger size */
-    height: 160px;
-    border: 1px solid rgba(255, 255, 255, 0.3); /* Lighter border */
+    bottom: 40px; right: 40px;
+    width: 160px; height: 160px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    visibility: hidden;
-    transform: scale(0.8); /* Start smaller */
-    transition: opacity 0.5s ease 0.5s, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.5s, visibility 0s linear 1s; /* Delayed appearance */
+    justify-content: center; align-items: center;
+    opacity: 0; visibility: hidden;
+    transform: scale(0.8);
+    transition: opacity 0.5s ease 0.5s, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.5s, visibility 0s linear 1s;
     z-index: 750;
 }
-
-.nav-circle.show {
-    opacity: 1;
-    visibility: visible;
-    transform: scale(1);
-    transition: opacity 0.5s ease 0.5s, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.5s, visibility 0s linear 0.5s;
-}
+.nav-circle.show { opacity: 1; visibility: visible; transform: scale(1); transition: opacity 0.5s ease 0.5s, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.5s, visibility 0s linear 0.5s; }
 
 .nav-item {
     position: absolute;
-    font-size: 11px; /* Smaller font */
+    font-size: 11px;
     text-transform: uppercase;
     cursor: pointer;
     z-index: 1;
     transition: color 0.3s ease;
-    color: rgba(255, 255, 255, 0.7); /* Dimmer default color */
-    padding: 5px; /* Add padding for easier hover */
-    user-select: none; /* Prevent text selection */
+    color: rgba(255, 255, 255, 0.7);
+    padding: 5px;
+    user-select: none;
 }
+.nav-item:hover { color: var(--text-color); }
 
-.nav-item:hover { /* Keep text hover, but indicator won't move */
-    color: var(--text-color);
-}
+.nav-index { top: 15px; left: 50%; transform: translateX(-50%); }
+.nav-work { left: 15px; top: 50%; transform: translateY(-50%); }
+.nav-about { right: 15px; top: 50%; transform: translateY(-50%); }
+.nav-contact { bottom: 15px; left: 50%; transform: translateX(-50%); }
 
-/* Position nav items */
-.nav-index { /* Top */
-    top: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-.nav-work { /* Left */
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-.nav-about { /* Right */
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-.nav-contact { /* Bottom */
-    bottom: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-/* Navigation Indicator Dot */
 .nav-indicator {
-    width: 8px; /* Smaller dot */
-    height: 8px;
+    width: 8px; height: 8px;
     background-color: var(--nav-indicator-color);
     border-radius: 50%;
     position: absolute;
-    top: 50%; /* Start at center */
-    left: 50%;
-    /* We achieve movement via rotate + translate */
-    transform: translate(-50%, -50%) rotate(0deg) translateY(-72px); /* Initial pos (adjust translateY based on radius-ish) */
-    z-index: 0; /* Below text */
+    top: 50%; left: 50%;
+    /* JS handles transform for movement */
+    transform: translate(-50%, -50%); /* Start at center before JS moves it */
+    z-index: 0;
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth movement */
 }
 
-
 /* --- PANELS (About/Contact) --- */
-.about-panel,
-.contact-panel {
+.about-panel, .contact-panel {
     position: fixed;
-    bottom: 220px; /* Position above nav circle */
-    right: 40px;
-    width: 350px; /* Slightly narrower */
+    bottom: 220px; right: 40px;
+    width: 350px;
     background-color: var(--secondary-bg);
-    border-radius: 10px; /* Less rounded */
+    border-radius: 10px;
     transform: translate3d(0, 20px, 0) scale3d(0.95, 0.95, 1);
-    opacity: 0;
-    visibility: hidden;
+    opacity: 0; visibility: hidden;
     transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 740; /* Below nav circle */
+    z-index: 740;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 25px; /* Adjusted padding */
+    padding: 25px;
     transform-style: preserve-3d;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2); /* Add shadow */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
-
-/* Arrow pointing down to nav circle */
-.about-panel::after,
-.contact-panel::after {
+.about-panel::after, .contact-panel::after {
     content: '';
     position: absolute;
-    bottom: -8px; /* Position arrow correctly */
-    left: calc(100% - 80px); /* Align roughly with nav circle center */
-    width: 16px;
-    height: 16px;
+    bottom: -8px; left: calc(100% - 80px);
+    width: 16px; height: 16px;
     background-color: var(--secondary-bg);
     border-right: 1px solid rgba(255, 255, 255, 0.1);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     transform: translateX(-50%) rotate(45deg);
-    z-index: -1; /* Behind panel */
+    z-index: -1;
 }
-
-.panel-active.about-panel,
-.panel-active.contact-panel {
+.panel-active.about-panel, .panel-active.contact-panel {
     transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
-    opacity: 1;
-    visibility: visible;
+    opacity: 1; visibility: visible;
 }
 
 .close-panel {
     position: absolute;
-    top: 10px; /* Closer to edge */
-    right: 10px;
-    width: 24px; /* Smaller close button */
-    height: 24px;
+    top: 10px; right: 10px;
+    width: 24px; height: 24px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: flex; justify-content: center; align-items: center;
     cursor: pointer;
-    z-index: 760;
-    background-color: rgba(0,0,0,0.1); /* Slight background */
+    z-index: 760; /* Above panel content */
+    background-color: rgba(0,0,0,0.1);
     font-size: 10px;
     transition: transform 0.2s ease, background-color 0.2s ease;
 }
+.close-panel:hover { transform: scale(1.1); background-color: rgba(255, 255, 255, 0.1); }
 
-.close-panel:hover {
-    transform: scale(1.1);
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.about-content,
-.contact-content {
+.about-content, .contact-content {
     margin-top: 0;
-    max-height: 60vh; /* Limit height */
+    max-height: 60vh;
     overflow-y: auto;
     padding-right: 5px; /* Space for scrollbar */
 }
 
 /* Custom scrollbar for panels */
-.about-content::-webkit-scrollbar,
-.contact-content::-webkit-scrollbar {
-    width: 4px;
-}
-.about-content::-webkit-scrollbar-thumb,
-.contact-content::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 2px;
-}
-.about-content::-webkit-scrollbar-track,
-.contact-content::-webkit-scrollbar-track {
-    background: transparent;
-}
-
+.about-content::-webkit-scrollbar, .contact-content::-webkit-scrollbar { width: 4px; }
+.about-content::-webkit-scrollbar-thumb, .contact-content::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 2px; }
+.about-content::-webkit-scrollbar-track, .contact-content::-webkit-scrollbar-track { background: transparent; }
 
 .profile-pic {
-    width: 60px; /* Smaller pic */
-    height: 60px;
+    width: 60px; height: 60px;
     border-radius: 50%;
     margin-bottom: 15px;
     background-color: #333;
     overflow: hidden;
-    float: left; /* Float left */
+    float: left;
     margin-right: 15px;
 }
+.profile-pic img { width: 100%; height: 100%; object-fit: cover; }
+.about-content h2 { margin-bottom: 15px; font-size: 16px; }
+.about-text { font-size: 11px; line-height: 1.7; margin-bottom: 15px; text-transform: uppercase; color: rgba(255, 255, 255, 0.8); }
+.about-text img { margin-top: 10px; max-width: 120px; height: auto; display: block; }
 
-.profile-pic img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+.contact-content h2 { margin-bottom: 20px; text-align: center; font-size: 16px; }
+.contact-email { display: block; text-align: center; margin-bottom: 25px; color: var(--text-color); text-decoration: none; font-size: 12px; transition: color 0.3s ease; }
+.contact-email:hover { color: var(--primary-color); }
+.social-links { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+.social-link { display: flex; justify-content: center; align-items: center; flex: 1; height: 35px; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 5px; text-decoration: none; color: var(--text-color); font-size: 10px; text-transform: uppercase; transition: background-color 0.3s; }
+.social-link:hover { background-color: rgba(255, 255, 255, 0.1); }
+.awards-link { display: flex; justify-content: space-between; align-items: center; width: 100%; height: 40px; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 5px; text-decoration: none; color: var(--text-color); padding: 0 15px; margin-top: 15px; transition: background-color 0.3s; }
+.awards-link:hover { background-color: rgba(255, 255, 255, 0.1); }
+.awards-link span:first-child { text-transform: uppercase; font-size: 10px; }
+.awards-link span:last-child { font-weight: bold; font-size: 12px; }
 
-.about-content h2 {
-    margin-bottom: 15px;
-    font-size: 16px; /* Smaller heading */
-}
-
-.about-text {
-    font-size: 11px; /* Smaller text */
-    line-height: 1.7;
-    margin-bottom: 15px;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.8); /* Slightly dimmer */
-}
-.about-text img {
-    margin-top: 10px;
-    max-width: 120px; /* Limit badge size */
-    height: auto;
-    display: block; /* Ensure block level */
-}
-
-.contact-content h2 {
-    margin-bottom: 20px;
-    text-align: center;
-    font-size: 16px;
-}
-
-.contact-email {
-    display: block;
-    text-align: center;
-    margin-bottom: 25px;
-    color: var(--text-color);
-    text-decoration: none;
-    font-size: 12px; /* Smaller email */
-    transition: color 0.3s ease;
-}
-
-.contact-email:hover {
-    color: var(--primary-color);
-}
-
-.social-links {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.social-link {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex: 1; /* Take equal width */
-    height: 35px; /* Shorter links */
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 5px;
-    text-decoration: none;
-    color: var(--text-color);
-    font-size: 10px; /* Smaller font */
-    text-transform: uppercase;
-    transition: background-color 0.3s;
-}
-
-.social-link:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.awards-link {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    height: 40px; /* Shorter link */
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 5px;
-    text-decoration: none;
-    color: var(--text-color);
-    padding: 0 15px;
-    margin-top: 15px;
-    transition: background-color 0.3s;
-}
-.awards-link:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.awards-link span:first-child {
-    text-transform: uppercase;
-    font-size: 10px;
-}
-
-.awards-link span:last-child {
-    font-weight: bold;
-    font-size: 12px;
-}
 
 /* --- WORK VIEW --- */
 #work-view {
     position: fixed;
-    top: 0;
-    left: 0; /* Slide from left */
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     background-color: var(--bg-color);
     z-index: 800;
-    padding: 0; /* Remove padding, handle internally */
-    transform: translate3d(-100%, 0, 0); /* Slide from left */
-    transition: transform 0.6s cubic-bezier(0.6, 0.05, 0.4, 1); /* Custom ease */
-    overflow-y: auto; /* Allow scrolling */
-    display: flex; /* Use flex column for header + details */
+    padding: 0;
+    transform: translate3d(-100%, 0, 0);
+    transition: transform 0.6s cubic-bezier(0.6, 0.05, 0.4, 1);
+    overflow-y: auto;
+    display: flex;
     flex-direction: column;
 }
+#work-view.show { transform: translate3d(0, 0, 0); }
 
-#work-view.show { /* Add class to show */
-    transform: translate3d(0, 0, 0);
-}
-
-
-#work-view .header { /* Reuse header styles */
-    position: sticky; /* Keep header visible on scroll */
-    top: 0;
-    background-color: var(--bg-color); /* Add background */
-    z-index: 810; /* Above content */
-    padding: 30px 40px; /* Match main header padding */
-    opacity: 1; /* Ensure visible */
-    visibility: visible;
-    transition: none; /* No transition needed here */
-    flex-shrink: 0; /* Prevent header shrinking */
+#work-view .header {
+    position: sticky; top: 0;
+    background-color: var(--bg-color);
+    z-index: 810;
+    padding: 30px 40px;
+    opacity: 1; visibility: visible;
+    transition: none;
+    flex-shrink: 0;
 }
 
 .work-details {
-    display: grid; /* Use grid for layout */
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* Responsive grid */
-    gap: 40px; /* Gap between items */
-    padding: 40px; /* Padding around the grid */
-    /* margin-top: 80px; */ /* Remove margin-top, handled by flex */
-    flex-grow: 1; /* Allow details to take remaining space */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 40px;
+    padding: 40px;
+    flex-grow: 1;
 }
-
 .work-detail {
     background-color: var(--secondary-bg);
     border-radius: 10px;
@@ -884,97 +632,90 @@ body {
     display: flex;
     flex-direction: column;
 }
-
-.work-detail:hover {
-    transform: translateY(-5px); /* Lift effect */
-    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
-}
-
-.work-image {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 16 / 9; /* Maintain aspect ratio */
-    object-fit: cover;
-    display: block;
-}
-
-.work-info {
-    padding: 20px; /* More padding */
-    display: flex;
-    flex-direction: column; /* Stack vertically */
-    gap: 10px;
-    margin-top: auto; /* Push info to bottom if needed */
-}
-
-.work-title {
-    text-transform: uppercase;
-    font-size: 14px; /* Larger title */
-    font-weight: bold;
-}
-
-.work-site {
-    font-size: 11px; /* Smaller site link */
-    color: rgba(255, 255, 255, 0.6); /* Dimmer color */
-    text-transform: uppercase;
-}
+.work-detail:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.25); }
+.work-image { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
+.work-info { padding: 20px; display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
+.work-title { text-transform: uppercase; font-size: 14px; font-weight: bold; }
+.work-site { font-size: 11px; color: rgba(255, 255, 255, 0.6); text-transform: uppercase; }
 
 .work-close {
-    position: fixed; /* Fixed position relative to viewport */
-    top: 45px; /* Align with header items */
-    right: 40px;
-    width: 30px;
-    height: 30px;
+    position: fixed;
+    top: 45px; right: 40px;
+    width: 30px; height: 30px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     cursor: pointer;
-    z-index: 820; /* Above header */
+    z-index: 820; /* Above work view header */
     background-color: rgba(0,0,0,0.1);
     font-size: 12px;
     transition: transform 0.2s ease, background-color 0.2s ease;
 }
-.work-close:hover {
-    transform: scale(1.1);
-    background-color: rgba(255, 255, 255, 0.1);
+.work-close:hover { transform: scale(1.1); background-color: rgba(255, 255, 255, 0.1); }
+
+
+/* --- CURSOR FOLLOWER TEXT STYLES --- */
+#cursor-follower-text {
+    position: fixed;
+    top: 0; left: 0;
+    /* Ensure colors contrast */
+    background-color: var(--text-color); /* Check variable */
+    color: var(--bg-color);             /* Check variable */
+    padding: 4px 10px;
+    border-radius: 4px; font-size: 10px; font-family: monospace;
+    text-transform: uppercase; white-space: nowrap;
+    /* Ensure high z-index */
+    z-index: 1100;
+    /* Start hidden */
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    /* Start position (JS will override) */
+    transform: translate(10px, 10px);
+    /* CSS transition for fade */
+    transition: opacity 0.2s ease, visibility 0s linear 0.2s;
+    will-change: opacity, transform; /* Optimize */
 }
+#cursor-follower-text.active {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.2s ease, visibility 0s linear 0s;
+}
+
 
 /* --- THEMES --- */
+/* Ensure --eye-wireframe-color is set correctly in ALL themes */
 
-/* Base Dark Theme (already defined in :root and body) */
+/* Base Dark Theme */
 .dark-theme {
-    --primary-color: #a39aed;
-    --text-color: #f0f0f0;
-    --bg-color: #111111;
-    --secondary-bg: #1a1a1a;
-    --mood-active-color: #ff6347;
-    --nav-indicator-color: #ffffff;
+    --primary-color: #a39aed; --text-color: #f0f0f0; --bg-color: #111111; --secondary-bg: #1a1a1a; --mood-active-color: #ff6347; --nav-indicator-color: #ffffff;
     --eye-wireframe-color: #a39aed;
     --eye-pupil-color: #a39aed;
-    --eye-orbit-color: #a39aed;
+    --eye-shape-bg: #050505;
 }
+/* Minor theme-specific overrides if needed */
 .dark-theme .status-dot { background-color: #4CAF50; }
 .dark-theme .dot-outline { border-color: var(--text-color); }
 .dark-theme .nav-circle { border-color: rgba(255, 255, 255, 0.3); }
 .dark-theme .nav-item { color: rgba(255, 255, 255, 0.7); }
 .dark-theme .nav-item:hover { color: var(--text-color); }
-.dark-theme .orbit { box-shadow: 0 0 20px 5px var(--eye-orbit-color); }
+.dark-theme #cursor-follower-text { background-color: var(--text-color); color: var(--bg-color); }
+.dark-theme .about-content::-webkit-scrollbar-thumb, .dark-theme .contact-content::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); }
+.dark-theme .sphere-line { border-color: var(--eye-wireframe-color); } /* Ensure theme override */
+.dark-theme .close-panel { color: var(--text-color); } /* Ensure close button text visible */
+.dark-theme .work-close { color: var(--text-color); } /* Ensure close button text visible */
 
 
 /* Light Theme */
 .light-theme {
-    --primary-color: #4a4aff; /* Brighter blue */
-    --text-color: #1a1a1a; /* Dark text */
-    --bg-color: #f0f0f0; /* Light grey background */
-    --secondary-bg: #ffffff; /* White secondary background */
-    --mood-active-color: #ff4500; /* Orange-red */
-    --nav-indicator-color: #1a1a1a; /* Dark nav dot */
+    --primary-color: #4a4aff; --text-color: #1a1a1a; --bg-color: #f0f0f0; --secondary-bg: #ffffff; --mood-active-color: #ff4500; --nav-indicator-color: #1a1a1a;
     --eye-wireframe-color: #4a4aff;
     --eye-pupil-color: #4a4aff;
-    --eye-orbit-color: #4a4aff;
+    --eye-shape-bg: #dddddd; /* Lighter eye shape */
 }
+/* --- Light theme overrides --- */
 .light-theme .loading-arc { border-color: rgba(0, 0, 0, 0.2); }
+.light-theme .loading-arc::before { border-top-color: var(--text-color); }
 .light-theme .mood-circle { border-color: rgba(0, 0, 0, 0.3); }
 .light-theme .center-crosshair-h, .light-theme .center-crosshair-v { background-color: rgba(0, 0, 0, 0.3); }
 .light-theme .mood-option { color: rgba(0, 0, 0, 0.6); }
@@ -986,44 +727,40 @@ body {
 .light-theme #set-mood-btn:hover { background-color: var(--text-color); color: var(--bg-color); border-color: var(--text-color); }
 .light-theme #set-mood-btn:hover .btn-plus { border-color: var(--bg-color); color: var(--bg-color); }
 .light-theme .logo { border-color: var(--text-color); }
-.light-theme .status-dot { background-color: #3e8e41; } /* Slightly different green */
+.light-theme .status-dot { background-color: #3e8e41; }
 .light-theme .dot-outline { border-color: var(--text-color); }
 .light-theme .section-title { color: rgba(0, 0, 0, 0.5); }
-.light-theme .work-label { color: white; background-color: rgba(0, 0, 0, 0.7); } /* Keep label readable */
-.light-theme .eye-outline { background-color: var(--bg-color); } /* Match background */
+.light-theme .work-label { color: white; background-color: rgba(0, 0, 0, 0.7); }
 .light-theme .nav-circle { border-color: rgba(0, 0, 0, 0.3); }
 .light-theme .nav-item { color: rgba(0, 0, 0, 0.6); }
 .light-theme .nav-item:hover { color: var(--text-color); }
 .light-theme .about-panel, .light-theme .contact-panel { border-color: rgba(0, 0, 0, 0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
 .light-theme .about-panel::after, .light-theme .contact-panel::after { background-color: var(--secondary-bg); border-color: rgba(0, 0, 0, 0.1); }
-.light-theme .close-panel { border-color: rgba(0, 0, 0, 0.2); background-color: rgba(255,255,255,0.1); }
+.light-theme .close-panel { border-color: rgba(0, 0, 0, 0.2); background-color: rgba(255,255,255,0.1); color: var(--text-color);}
 .light-theme .close-panel:hover { background-color: rgba(0, 0, 0, 0.1); }
 .light-theme .about-text { color: rgba(0, 0, 0, 0.8); }
 .light-theme .social-link { border-color: rgba(0, 0, 0, 0.2); }
 .light-theme .social-link:hover { background-color: rgba(0, 0, 0, 0.05); }
 .light-theme .awards-link { border-color: rgba(0, 0, 0, 0.2); }
 .light-theme .awards-link:hover { background-color: rgba(0, 0, 0, 0.05); }
-.light-theme .work-close { border-color: rgba(0, 0, 0, 0.2); background-color: rgba(255,255,255,0.1); }
+.light-theme .work-close { border-color: rgba(0, 0, 0, 0.2); background-color: rgba(255,255,255,0.1); color: var(--text-color);}
 .light-theme .work-close:hover { background-color: rgba(0, 0, 0, 0.1); }
 .light-theme .work-site { color: rgba(0, 0, 0, 0.6); }
-.light-theme .about-content::-webkit-scrollbar-thumb,
-.light-theme .contact-content::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.3); }
-.light-theme .orbit { box-shadow: 0 0 20px 5px var(--eye-orbit-color); }
+.light-theme .about-content::-webkit-scrollbar-thumb, .light-theme .contact-content::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.3); }
+.light-theme #cursor-follower-text { background-color: var(--text-color); color: var(--bg-color); }
+.light-theme .sphere-line { border-color: var(--eye-wireframe-color); } /* Ensure theme override */
 
 
 /* Spark Theme */
 .spark-theme {
-    --primary-color: #f97316; /* Orange */
-    --text-color: #fff7ed; /* Very light orange/cream text */
-    --bg-color: #1c1917; /* Dark brown/black background */
-    --secondary-bg: #292524; /* Slightly lighter dark */
-    --mood-active-color: #f97316; /* Orange */
-    --nav-indicator-color: #fff7ed; /* Light nav dot */
-    --eye-wireframe-color: #f97316;
+    --primary-color: #f97316; --text-color: #fff7ed; --bg-color: #1c1917; --secondary-bg: #292524; --mood-active-color: #f97316; --nav-indicator-color: #fff7ed;
+    --eye-wireframe-color: #fb923c; /* Use a distinct spark color */
     --eye-pupil-color: #f97316;
-    --eye-orbit-color: #fdba74; /* Lighter orange for orbit */
+    --eye-shape-bg: #0f0d0c; /* Very dark brown/black */
 }
+/* --- Spark theme overrides --- */
 .spark-theme .loading-arc { border-color: rgba(255, 247, 237, 0.2); }
+.spark-theme .loading-arc::before { border-top-color: var(--text-color); }
 .spark-theme .mood-circle { border-color: rgba(255, 247, 237, 0.3); }
 .spark-theme .center-crosshair-h, .spark-theme .center-crosshair-v { background-color: rgba(255, 247, 237, 0.3); }
 .spark-theme .mood-option { color: rgba(255, 247, 237, 0.6); }
@@ -1035,136 +772,65 @@ body {
 .spark-theme #set-mood-btn:hover { background-color: var(--text-color); color: var(--bg-color); border-color: var(--text-color); }
 .spark-theme #set-mood-btn:hover .btn-plus { border-color: var(--bg-color); color: var(--bg-color); }
 .spark-theme .logo { border-color: var(--text-color); }
-.spark-theme .status-dot { background-color: #fb923c; } /* Lighter orange dot */
+.spark-theme .status-dot { background-color: #fb923c; }
 .spark-theme .dot-outline { border-color: var(--text-color); }
 .spark-theme .section-title { color: rgba(255, 247, 237, 0.5); }
-.spark-theme .work-label { color: #1c1917; background-color: rgba(249, 115, 22, 0.8); } /* Dark text on orange */
-.spark-theme .eye-outline { background-color: var(--bg-color); }
+.spark-theme .work-label { color: #1c1917; background-color: rgba(249, 115, 22, 0.8); }
 .spark-theme .nav-circle { border-color: rgba(255, 247, 237, 0.3); }
 .spark-theme .nav-item { color: rgba(255, 247, 237, 0.6); }
 .spark-theme .nav-item:hover { color: var(--text-color); }
 .spark-theme .about-panel, .spark-theme .contact-panel { border-color: rgba(255, 247, 237, 0.1); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
 .spark-theme .about-panel::after, .spark-theme .contact-panel::after { background-color: var(--secondary-bg); border-color: rgba(255, 247, 237, 0.1); }
-.spark-theme .close-panel { border-color: rgba(255, 247, 237, 0.2); background-color: rgba(255,255,255,0.05); }
+.spark-theme .close-panel { border-color: rgba(255, 247, 237, 0.2); background-color: rgba(255,255,255,0.05); color: var(--text-color);}
 .spark-theme .close-panel:hover { background-color: rgba(255, 247, 237, 0.1); }
 .spark-theme .about-text { color: rgba(255, 247, 237, 0.8); }
 .spark-theme .social-link { border-color: rgba(255, 247, 237, 0.2); }
 .spark-theme .social-link:hover { background-color: rgba(255, 247, 237, 0.05); }
 .spark-theme .awards-link { border-color: rgba(255, 247, 237, 0.2); }
 .spark-theme .awards-link:hover { background-color: rgba(255, 247, 237, 0.05); }
-.spark-theme .work-close { border-color: rgba(255, 247, 237, 0.2); background-color: rgba(255,255,255,0.05); }
+.spark-theme .work-close { border-color: rgba(255, 247, 237, 0.2); background-color: rgba(255,255,255,0.05); color: var(--text-color);}
 .spark-theme .work-close:hover { background-color: rgba(255, 247, 237, 0.1); }
 .spark-theme .work-site { color: rgba(255, 247, 237, 0.6); }
-.spark-theme .about-content::-webkit-scrollbar-thumb,
-.spark-theme .contact-content::-webkit-scrollbar-thumb { background: rgba(255, 247, 237, 0.3); }
-.spark-theme .orbit { box-shadow: 0 0 20px 5px var(--eye-orbit-color); }
+.spark-theme .about-content::-webkit-scrollbar-thumb, .spark-theme .contact-content::-webkit-scrollbar-thumb { background: rgba(255, 247, 237, 0.3); }
+.spark-theme #cursor-follower-text { background-color: var(--text-color); color: var(--bg-color); }
+.spark-theme .sphere-line { border-color: var(--eye-wireframe-color); } /* Ensure theme override */
 
 
 /* --- RESPONSIVE --- */
 @media (max-width: 1024px) {
-    .content-wrapper { /* Apply flex-direction to the wrapper */
-        flex-direction: column;
-        padding: 0 20px 20px 20px; /* Adjust padding */
-    }
-    .sidebar {
-        width: 100%;
-        padding-right: 0; /* Remove right padding */
-        padding-bottom: 40px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Separator */
-        margin-bottom: 40px;
-    }
+    :root { --sphere-size: 250px; } /* Smaller sphere on medium screens */
+    .content-wrapper { flex-direction: column; padding: 0 20px 20px 20px; }
+    .sidebar { width: 100%; padding-right: 0; padding-bottom: 40px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 40px; }
     .light-theme .sidebar { border-bottom-color: rgba(0, 0, 0, 0.1); }
     .spark-theme .sidebar { border-bottom-color: rgba(255, 247, 237, 0.1); }
-
-    .sidebar-dots { flex-direction: row; /* Horizontal dots */ }
-    .main-area { min-height: 350px; } /* Adjust height */
-    .sidebar, .main-area { padding-top: 30px; /* Adjust top padding for mobile */ }
-    .eye-container { width: 300px; height: 300px; } /* Smaller eye */
-    .work-details { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); } /* Adjust grid */
-     #work-view .header { padding: 20px; } /* Adjust work view header padding */
+    .sidebar-dots { flex-direction: row; }
+    .main-area { min-height: calc(var(--sphere-size) + 40px); }
+    .sidebar, .main-area { padding-top: 30px; }
+    .work-details { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+    #work-view .header { padding: 20px; }
 }
 
 @media (max-width: 768px) {
-    .header {
-        padding: 20px;
-        align-items: center; /* Ensure vertical alignment */
-    }
-    /* Hide full info block on small screens, keep logo and status */
+    :root { --sphere-size: 200px; } /* Smaller sphere on small screens */
+    .header { padding: 20px; align-items: center; }
     .header-info-block { display: none; }
     .logo { width: 35px; height: 35px; font-size: 24px; }
     .content-wrapper { padding: 0 20px 20px 20px; }
-    .nav-circle {
-        width: 130px;
-        height: 130px;
-        bottom: 20px;
-        right: 20px;
-    }
-     .nav-indicator { /* Adjust indicator position for smaller circle */
-        transform: translate(-50%, -50%) rotate(0deg) translateY(-57px);
-    }
-    .about-panel,
-    .contact-panel {
-        width: calc(100% - 40px); /* Full width minus padding */
-        bottom: 170px; /* Adjust position */
-        right: 20px;
-        left: 20px;
-        max-height: 50vh; /* Limit height more */
-    }
-    .about-panel::after,
-    .contact-panel::after {
-         left: 50%; /* Center arrow on mobile */
-         transform: translateX(-50%) rotate(45deg);
-    }
+    .nav-circle { width: 130px; height: 130px; bottom: 20px; right: 20px; }
+    /* Nav indicator transform is handled by JS, no static mobile version needed */
+    .about-panel, .contact-panel { width: calc(100% - 40px); bottom: 170px; right: 20px; left: 20px; max-height: 50vh; }
+    .about-panel::after, .contact-panel::after { left: 50%; transform: translateX(-50%) rotate(45deg); }
     .work-details { padding: 20px; gap: 20px; }
     #work-view .header { padding: 20px; }
-    /* Adjust work view header elements for mobile if needed */
     #work-view .header-info-block { display: none; }
     .work-close { top: 28px; right: 20px; width: 28px; height: 28px; }
     .mood-circle { width: 200px; height: 200px; }
-    .tick-mark { transform-origin: center calc(200px / 2); }
-    .sidebar, .main-area { padding-top: 20px; /* Further adjust top padding */ }
+    .tick-mark { transform-origin: center calc(200px / 2); } /* Adjust origin */
+    .sidebar, .main-area { padding-top: 20px; }
     #mood-selector p { font-size: 12px; text-align: center; padding: 0 20px; }
-    .eye-container { width: 250px; height: 250px; } /* Smaller eye */
+    .main-area { min-height: calc(var(--sphere-size) + 40px); } /* Adjust min-height */
+    .eye-sphere { animation: rotateSphere 60s linear infinite; } /* Slower animation on mobile? */
 }
 
-/* --- CURSOR FOLLOWER TEXT STYLES --- */
-#cursor-follower-text {
-    position: fixed; /* Position relative to viewport */
-    top: 0;          /* Will be updated by JS */
-    left: 0;         /* Will be updated by JS */
-    background-color: var(--text-color); /* Use theme variables */
-    color: var(--bg-color);             /* Use theme variables */
-    padding: 4px 10px; /* Adjust padding */
-    border-radius: 4px;
-    font-size: 10px;
-    font-family: monospace;
-    text-transform: uppercase;
-    white-space: nowrap;
-    z-index: 1100; /* Above everything else */
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none; /* Doesn't block clicks/hovers below it */
-    transform: translate(15px, 15px); /* Initial offset from cursor */
-    transition: opacity 0.2s ease, visibility 0s linear 0.2s; /* Fade transition */
-}
 
-#cursor-follower-text.active {
-    opacity: 1;
-    visibility: visible;
-    transition: opacity 0.2s ease, visibility 0s linear 0s; /* Fade in */
-}
-
-/* Ensure theme colors apply */
-.light-theme #cursor-follower-text {
-    background-color: var(--text-color);
-    color: var(--bg-color);
-}
-.spark-theme #cursor-follower-text {
-    background-color: var(--text-color);
-    color: var(--bg-color);
-}
-
-/* Add cursor pointer to the trigger elements */
-.interactive-hover-trigger {
-    cursor: pointer;
-}
+/* --- END OF FILE styles.css --- */
