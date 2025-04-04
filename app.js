@@ -4,7 +4,24 @@
 let isMobile = window.innerWidth < 768; // Keep this
 
 // Loading sequence
-// ... (Keep existing loader/mood selector logic) ...
+function animateLoader() {
+    const loaderTextElement = document.getElementById('loader-text');
+    if (!loaderTextElement) return;
+    const originalTextContent = loaderTextElement.textContent.replace(/\.*$/, '');
+    let dotCount = 0;
+    let intervalId = null;
+    function updateDots() {
+        const currentLoader = document.getElementById('loader');
+        if (!currentLoader || currentLoader.style.display === 'none' || currentLoader.classList.contains('hide')) {
+            if (intervalId) clearInterval(intervalId);
+            return;
+        }
+        dotCount = (dotCount + 1) % 4;
+        loaderTextElement.textContent = originalTextContent + '.'.repeat(dotCount);
+    }
+    intervalId = setInterval(updateDots, 400);
+}
+animateLoader();
 
 document.addEventListener('DOMContentLoaded', function() {
     // ... (Keep existing initializations: pupil, eye, mood selector) ...
@@ -45,21 +62,21 @@ document.addEventListener('DOMContentLoaded', function() {
             followerActive = false;
         });
 
-         // Add click listener directly to triggers to hide follower
-         trigger.addEventListener('click', () => {
-             if (isMobile || !cursorFollower) return;
-             cursorFollower.classList.remove('active'); // Hide immediately on click
-             followerActive = false;
-             // Note: The actual panel opening logic is handled below
-             // by associating these triggers with nav items or direct actions.
-         });
+        // Add click listener directly to triggers to hide follower
+        trigger.addEventListener('click', () => {
+            if (isMobile || !cursorFollower) return;
+            cursorFollower.classList.remove('active'); // Hide immediately on click
+            followerActive = false;
+            // Note: The actual panel opening logic is handled below
+            // by associating these triggers with nav items or direct actions.
+        });
     });
 
     function hideCursorFollower() {
-         if (cursorFollower) {
+        if (cursorFollower) {
             cursorFollower.classList.remove('active');
             followerActive = false;
-         }
+        }
     }
     // --- END NEW: Cursor Follower Setup ---
 
@@ -77,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
             setupEyeTracking();
             const initialNavItem = document.querySelector('.nav-item.nav-index');
             if(initialNavItem) moveNavIndicator(initialNavItem);
-             hideCursorFollower(); // Hide follower when mood is set
+            hideCursorFollower(); // Hide follower when mood is set
         }, 500);
     });
 
@@ -113,13 +130,13 @@ document.addEventListener('DOMContentLoaded', function() {
             hideCursorFollower(); // Hide follower
         });
     }
-     // Use the specific trigger ID for the work thumbnail click
+    // Use the specific trigger ID for the work thumbnail click
     if (workThumbnailTrigger && workView && workNavItem) {
         workThumbnailTrigger.addEventListener('click', function() {
-             workView.classList.add('show');
-             closeAllPanels(); // Close other panels
-             moveNavIndicator(workNavItem); // Move indicator to Work
-             hideCursorFollower(); // Hide follower
+            workView.classList.add('show');
+            closeAllPanels(); // Close other panels
+            moveNavIndicator(workNavItem); // Move indicator to Work
+            hideCursorFollower(); // Hide follower
         });
     }
     // --- Remove OLD Hover Button Listeners & workThumbnail listener ---
@@ -129,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to move the indicator
     function moveNavIndicator(targetItem) {
        // ... (keep existing moveNavIndicator logic) ...
-         const navIndicator = document.querySelector('.nav-indicator');
+        const navIndicator = document.querySelector('.nav-indicator');
         if (!navIndicator || !navCircle || !targetItem) return;
 
         const angle = parseFloat(targetItem.getAttribute('data-angle')) || 0;
@@ -264,7 +281,7 @@ document.addEventListener('DOMContentLoaded', function() {
                  if(rafId) cancelAnimationFrame(rafId);
                  rafId = null;
                  return;
-             }
+            }
             const outlineRect = eyeOutline.getBoundingClientRect();
             const maxMoveX = outlineRect.width * 0.3;
             const maxMoveY = outlineRect.height * 0.3;
@@ -280,7 +297,7 @@ document.addEventListener('DOMContentLoaded', function() {
                  targetY = deltaY * influenceFactor;
                  targetX = Math.max(-maxMoveX, Math.min(maxMoveX, targetX));
                  targetY = Math.max(-maxMoveY, Math.min(maxMoveY, targetY));
-             }
+            }
             currentX += (targetX - currentX) * easing;
             currentY += (targetY - currentY) * easing;
             innerPupil.style.transform = `translate(-50%, -50%) translate(${currentX}px, ${currentY}px)`;
@@ -358,58 +375,35 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-
-    // ... (Keep animateLoader function) ...
-     function animateLoader() {
-        const loaderTextElement = document.getElementById('loader-text');
-        if (!loaderTextElement) return;
-        const originalTextContent = loaderTextElement.textContent.replace(/\.*$/, '');
-        let dotCount = 0;
-        let intervalId = null;
-        function updateDots() {
-            const currentLoader = document.getElementById('loader');
-            if (!currentLoader || currentLoader.style.display === 'none' || currentLoader.classList.contains('hide')) {
-                if (intervalId) clearInterval(intervalId);
-                return;
-            }
-            dotCount = (dotCount + 1) % 4;
-            loaderTextElement.textContent = originalTextContent + '.'.repeat(dotCount);
-        }
-        intervalId = setInterval(updateDots, 400);
-    }
-    animateLoader();
-    
     // Add basic device orientation handling for mobile eye (optional, can be intensive)
-// function handleOrientation(event) {
-//     if (!isMobile || !innerPupil || !eyeOutline) return;
+    // function handleOrientation(event) {
+    //     if (!isMobile || !innerPupil || !eyeOutline) return;
 
-//     const maxTilt = 25; // Max tilt degrees
-//     const outlineRect = eyeOutline.getBoundingClientRect();
-//     const maxMoveX = outlineRect.width * 0.2; // Limit movement range
-//     const maxMoveY = outlineRect.height * 0.2;
+    //     const maxTilt = 25; // Max tilt degrees
+    //     const outlineRect = eyeOutline.getBoundingClientRect();
+    //     const maxMoveX = outlineRect.width * 0.2; // Limit movement range
+    //     const maxMoveY = outlineRect.height * 0.2;
 
-//     // Beta: front-back tilt, Gamma: left-right tilt
-//     // Clamp values to maxTilt
-//     let tiltX = Math.min(Math.max(event.gamma, -maxTilt), maxTilt);
-//     let tiltY = Math.min(Math.max(event.beta, -maxTilt), maxTilt);
+    //     // Beta: front-back tilt, Gamma: left-right tilt
+    //     // Clamp values to maxTilt
+    //     let tiltX = Math.min(Math.max(event.gamma, -maxTilt), maxTilt);
+    //     let tiltY = Math.min(Math.max(event.beta, -maxTilt), maxTilt);
 
-//     // Normalize tilt values (-1 to 1) and scale by maxMove
-//     const moveX = (tiltX / maxTilt) * maxMoveX;
-//     const moveY = (tiltY / maxTilt) * maxMoveY;
+    //     // Normalize tilt values (-1 to 1) and scale by maxMove
+    //     const moveX = (tiltX / maxTilt) * maxMoveX;
+    //     const moveY = (tiltY / maxTilt) * maxMoveY;
 
-//     innerPupil.style.transform = `translate(-50%, -50%) translate(${moveX}px, ${moveY}px)`;
-// }
+    //     innerPupil.style.transform = `translate(-50%, -50%) translate(${moveX}px, ${moveY}px)`;
+    // }
 
-// if (window.DeviceOrientationEvent) {
-//   window.addEventListener('deviceorientation', handleOrientation);
-// }
+    // if (window.DeviceOrientationEvent) {
+    //   window.addEventListener('deviceorientation', handleOrientation);
+    // }
 
     // Initial setup calls
     updateSidebarDots(document.body.classList[0]?.split('-')[0] || 'dark');
     // Initial eye setup happens after mood is set, or on resize if already visible
 
-
 }); // End DOMContentLoaded
-
 
 // --- END OF FILE app.js ---
