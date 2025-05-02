@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio</title> <!-- CHANGE THIS -->
+    <link rel="stylesheet" href="styles.css"> <!-- Make sure this points to the correct CSS file -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap"
+        rel="stylesheet">
+    <!-- Add other meta tags, favicons etc. here -->
+</head>
+
+<body class="dark-theme"> <!-- Default theme -->
+
+    <!-- Loader - Container keeps the ID, inner content is replaced -->
+    <div id="loader">
+        <!-- From Uiverse.io by Nawsome -->
+        <div class="loading">
+            <svg xmlns="http://www.w3.org/2000/svg" width="124" height="124" viewBox="0 0 124 124">
+                <circle class="circle-loading" cx="62" cy="62" r="59" fill="none" stroke="hsl(271, 76%, 74%)"
+                    stroke-width="6px"></circle>
+                <circle class="circle" cx="62" cy="62" r="59" fill="none" stroke="hsl(271, 76%, 53%)" stroke-width="6px"
+                    stroke-linecap="round"></circle>
+                <polyline class="check" points="73.56 48.63 57.88 72.69 49.38 62" fill="none"
+                    stroke="hsl(271, 76%, 53%)" stroke-width="6px" stroke-linecap="round"></polyline>
+            </svg>
+        </div>
+        <!-- Optional: Add text below the loader if desired -->
+        <!-- <div id="loader-text">Loading...</div> -->
+    </div>
+
+    <!-- Cursor Follower Text -->
+    <div id="cursor-follower-text"></div>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-container">
+
+        <!-- Top Bar -->
+        <header class="top-bar">
+            <div class="logo interactive-hover-trigger" data-hover-text="Home">E</div> <!-- Added data-hover-text -->
+            <!-- Mobile Navigation Hidden - Consider adding a hamburger menu toggle here -->
+            <nav class="main-nav">
+                <a href="#" id="nav-work-trigger" class="nav-link interactive-hover-trigger scramble-hover-trigger"
+                    data-hover-text="View Work">Work</a>
+                <a href="#" id="nav-about-trigger" class="nav-link interactive-hover-trigger scramble-hover-trigger"
+                    data-hover-text="About Me">About</a>
+                <a href="#" id="nav-contact-trigger" class="nav-link interactive-hover-trigger scramble-hover-trigger"
+                    data-hover-text="Contact">Contact</a>
+                <a href="#" id="nav-skills-trigger" class="nav-link interactive-hover-trigger scramble-hover-trigger"
+                    data-hover-text="My Skills">Skills</a>
+                <a href="#" id="nav-tools-trigger" class="nav-link interactive-hover-trigger scramble-hover-trigger"
+                    data-hover-text="My Tools">Tools</a> <!-- Added Tools Link -->
+            </nav>
+            <div class="header-extras">
+                <div class="theme-dots">
+                    <button class="dot interactive-hover-trigger" data-theme="dark" data-hover-text="Dark Mode"
+                        aria-label="Switch to Dark Theme"></button>
+                    <button class="dot interactive-hover-trigger" data-theme="light" data-hover-text="Light Mode"
+                        aria-label="Switch to Light Theme"></button>
+                    <button class="dot interactive-hover-trigger" data-theme="spark" data-hover-text="Spark Mode"
+                        aria-label="Switch to Spark Theme"></button>
+                    <button class="dot easter-egg-dot interactive-hover-trigger" data-theme="catgirl"
+                        data-hover-text="???" aria-label="Switch to ??? Theme"></button>
+                </div>
+                <div id="header-status-trigger" class="status interactive-hover-trigger scramble-hover-trigger"
+                    data-hover-text="Status">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Available</span> <!-- Wrap text in its own span -->
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-text">
+                <h1 id="hero-eren" class="interactive-hover-trigger scramble-hover-trigger" data-hover-text="About Me">
+                    EREN</h1> <!-- Added data-hover-text -->
+                <h2>Developer</h2>
+                <p>Passionate about crafting unique digital experiences with code. Exploring the capabilities of
+                    technology.</p> <!-- Removed design/art references -->
+            </div>
+            <!-- Floating Action Texts (Hidden on mobile by CSS) -->
+            <div id="action-text-skills" class="floating-action-text interactive-hover-trigger"
+                data-hover-text="See My Skills">What I Can Do</div>
+            <div id="action-text-work" class="floating-action-text interactive-hover-trigger"
+                data-hover-text="See My Work">What I Did</div>
+            <div id="action-text-skills-alt" class="floating-action-text interactive-hover-trigger"
+                data-hover-text="See My Skills">What I Use</div>
+
+            <!-- EYE WRAPPER IS NOW HIDDEN ON MOBILE via CSS -->
+            <div id="eye-wrapper" class="eye-wrapper interactive-hover-trigger" data-hover-text="Look Closer">
+                <div class="atom-animation">
+                    <div class="atom-orbit orbit-1">
+                        <div class="electron"></div>
+                    </div>
+                    <div class="atom-orbit orbit-2">
+                        <div class="electron"></div>
+                    </div>
+                    <div class="atom-orbit orbit-3">
+                        <div class="electron"></div>
+                    </div>
+                </div>
+                <div class="eye-container">
+                    <div class="eye">
+                        <div class="pupil"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div> <!-- End Main Container -->
+
+    <!-- Panels (Initially Hidden) -->
+    <div class="content-panels">
+        <aside id="about-panel" class="panel">
+            <button class="close-panel interactive-hover-trigger" data-hover-text="Close"
+                aria-label="Close About Panel">×</button>
+            <div class="panel-content about-content">
+                <div class="profile-pic">
+                    <img src="https://avatars.githubusercontent.com/u/150382838?v=4"> <!-- ADD YOUR PROFILE PICTURE -->
+                </div>
+                <h3>riices</h3>
+                <p>Focused on web development expertise, specializing in building experience-driven websites that stand
+                    out through seamless motion and innovative functionality.</p>
+                <p>Currently working as a freelancer and open to new opportunities and collaborations.</p>
+                <!-- Add more content -->
+            </div>
+        </aside>
+
+        <aside id="contact-panel" class="panel">
+            <button class="close-panel interactive-hover-trigger" data-hover-text="Close"
+                aria-label="Close Contact Panel">×</button>
+            <div class="panel-content contact-content">
+                <h3>Get In Touch</h3>
+                <p>I'm currently available for freelance projects and collaborations. Feel free to reach out!</p>
+                <a href="mailto:cat@catgirl.dpdns.org"
+                    class="contact-email interactive-hover-trigger scramble-hover-trigger"
+                    data-hover-text="Send Email">cat@catgirl.dpdns.org</a> <!-- CHANGE EMAIL -->
+                <p>You can also find me on:</p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/riice.ss/" target="_blank" rel="noopener noreferrer"
+                        class="interactive-hover-trigger scramble-hover-trigger"
+                        data-hover-text="Instagram">Instagram</a> <!-- Added data-hover-text and fixed target URL -->
+                </div>
+                <!-- Optional: Add a button to open a contact form popup -->
+                <!-- <button id="open-contact-form-btn">Or Use Contact Form</button> -->
+            </div>
+        </aside>
+
+        <!-- Added Skills Panel -->
+        <aside id="skills-panel" class="panel">
+            <button class="close-panel interactive-hover-trigger" data-hover-text="Close"
+                aria-label="Close Skills Panel">×</button>
+            <div class="panel-content skills-content">
+                <h3>Skills</h3>
+                <p>Languages and technologies I work with:</p>
+                <ul class="skills-list">
+                    <!-- HTML5 -->
+                    <li>
+                        <img src="https://www.svgrepo.com/show/479068/html5-logo.svg" alt="HTML5 Logo">
+                        <span>HTML5</span>
+                    </li>
+                    <!-- CSS3 -->
+                    <li>
+                        <img src="https://www.svgrepo.com/show/508795/css3-02.svg" alt="CSS3 Logo">
+                        <span>CSS3</span>
+                    </li>
+                    <!-- JavaScript -->
+                    <li>
+                        <img src="https://www.svgrepo.com/show/521288/javascript-16.svg" alt="JavaScript Logo">
+                        <span>JavaScript</span>
+                    </li>
+                    <!-- C++ -->
+                    <li>
+                        <img src="https://www.svgrepo.com/show/333518/c-plus-plus.svg" alt="C++ Logo">
+                        <span>C++</span>
+                    </li>
+                    <!-- Lua -->
+                    <li>
+                        <img src="https://www.svgrepo.com/show/508927/lua02.svg" alt="Lua Logo">
+                        <span>Lua</span>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Added Tools Panel -->
+        <aside id="tools-panel" class="panel">
+            <button class="close-panel interactive-hover-trigger" data-hover-text="Close"
+                aria-label="Close Tools Panel">×</button>
+            <div class="panel-content tools-content">
+                <h3>Tools</h3>
+                <p>Software and hardware I utilize:</p>
+                <ul class="skills-list"> <!-- Re-use skills-list styling -->
+                    <!-- Arduino -->
+                    <li>
+                        <img src="https://www.svgrepo.com/show/473549/arduino.svg" alt="Arduino Logo">
+                        <span>Arduino</span>
+                    </li>
+                    <!-- VS Code -->
+                    <li>
+                        <img src="https://www.svgrepo.com/show/452129/vs-code.svg" alt="Visual Studio Code Logo">
+                        <span>VS Code</span>
+                    </li>
+                    <!-- Visual Studio -->
+                    <li>
+                        <img src="https://www.svgrepo.com/show/342346/visual-studio.svg" alt="Visual Studio Logo">
+                        <span>Visual Studio</span>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Work View (Initially Hidden) -->
+    <section id="work-view" class="work-view-panel">
+        <header class="work-view-header">
+            <div class="logo">E</div> <!-- Match top bar logo -->
+            <button class="work-close interactive-hover-trigger" data-hover-text="Close"
+                aria-label="Close Work View"><span>×</span> Close</button>
+        </header>
+        <div class="work-grid">
+            <h2>Selected Work</h2>
+            <!-- Add your portfolio items here -->
+            <a href="#" class="work-item interactive-hover-trigger" data-hover-text="View Project 1">
+                <img src="placeholder-project1.jpg" alt="Project 1 Thumbnail" class="work-image">
+                <!-- ADD PROJECT IMAGE -->
+                <div class="work-info">
+                    <h3>Project Title One</h3>
+                    <p>Brief description of the project, technologies used, and your role.</p>
+                    <span class="work-link">View Details →</span>
+                </div>
+            </a>
+            <a href="#" class="work-item interactive-hover-trigger" data-hover-text="View Project 2">
+                <img src="placeholder-project2.jpg" alt="Project 2 Thumbnail" class="work-image">
+                <!-- ADD PROJECT IMAGE -->
+                <div class="work-info">
+                    <h3>Project Title Two</h3>
+                    <p>Another project description focusing on different skills or challenges.</p>
+                    <span class="work-link">View Details →</span>
+                </div>
+            </a>
+            <a href="#" class="work-item interactive-hover-trigger" data-hover-text="View Project 3">
+                <img src="placeholder-project3.jpg" alt="Project 3 Thumbnail" class="work-image">
+                <!-- ADD PROJECT IMAGE -->
+                <div class="work-info">
+                    <h3>Project Title Three</h3>
+                    <p>Description for the third project example.</p>
+                    <span class="work-link">View Details →</span>
+                </div>
+            </a>
+            <!-- Add more work items as needed -->
+        </div>
+    </section>
+
+    <!-- Mood Selector Modal (Initially Hidden) -->
+    <div id="mood-selector" class="mood-modal">
+        <div class="mood-selector-content">
+            <button class="mood-close-btn interactive-hover-trigger" data-hover-text="Close"
+                aria-label="Close Mood Selector">×</button>
+            <p>Select a Site Mood</p>
+            <div class="mood-options-container">
+                <button class="mood-option" data-theme="dark">
+                    <span class="mood-swatch dark-swatch"></span> Dark
+                </button>
+                <button class="mood-option" data-theme="light">
+                    <span class="mood-swatch light-swatch"></span> Light
+                </button>
+                <button class="mood-option" data-theme="spark">
+                    <span class="mood-swatch spark-swatch"></span> Spark
+                </button>
+                <button class="mood-option" data-theme="catgirl">
+                    <span class="mood-swatch catgirl-swatch"></span> ???
+                </button>
+                <!-- Add buttons matching your theme dots -->
+            </div>
+            <button id="set-mood-btn">Set Mood</button>
+        </div>
+    </div>
+
+    <!-- Optional: Contact Form Popup -->
+    <!--
+    <div id="contact-form-popup" class="contact-form-modal">
+        <div class="contact-form-content">
+             <button class="contact-form-close-btn">×</button>
+             <h3>Contact Me</h3>
+             <form id="contact-form">
+                 <label for="name">Name:</label>
+                 <input type="text" id="name" name="name" required>
+                 <label for="email">Email:</label>
+                 <input type="email" id="email" name="email" required>
+                 <label for="message">Message:</label>
+                 <textarea id="message" name="message" rows="4" required></textarea>
+                 <button type="submit">Send Message</button>
+             </form>
+        </div>
+    </div>
+    -->
+
+    <script src="app.js"></script>
+</body>
+
+</html>
